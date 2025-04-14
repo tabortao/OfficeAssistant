@@ -8,6 +8,13 @@ namespace OfficeAssistant.ViewModels
 {
     public class PdfMergeViewModel : ViewModelBase
     {
+        private string _statusMessage = "";
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set => SetField(ref _statusMessage, value);
+        }
+
         public ObservableCollection<string> SelectedFiles { get; } = new();
 
         public async Task SelectFiles()
@@ -61,13 +68,8 @@ namespace OfficeAssistant.ViewModels
                     }
                 }
                 output.Save(file.Path.LocalPath);
-                await ShowMessage("PDF合并完成！");
+                StatusMessage = "PDF合并完成！";
             }
-        }
-
-        private async Task ShowMessage(string message)
-        {
-            await MessageBox.Show(App.MainWindow, "提示", message, MessageBox.MessageBoxButtons.Ok);
         }
     }
 }

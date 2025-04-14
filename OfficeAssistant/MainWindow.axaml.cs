@@ -136,12 +136,12 @@ public partial class MainWindow : Window
             var pdfMergeView = this.GetControl<UserControl>("PdfMergeView");
             var pdfSplitView = this.GetControl<UserControl>("PdfSplitView");
 
-            if (selectedItem.Content?.ToString() == "PDF合并")
+            if (selectedItem.Content?.ToString() == "PDF批量合并")
             {
                 if (pdfMergeView != null) pdfMergeView.IsVisible = true;
                 if (pdfSplitView != null) pdfSplitView.IsVisible = false;
             }
-            else if (selectedItem.Content?.ToString() == "PDF拆分")
+            else if (selectedItem.Content?.ToString() == "PDF批量拆分")
             {
                 if (pdfMergeView != null) pdfMergeView.IsVisible = false;
                 if (pdfSplitView != null) pdfSplitView.IsVisible = true;

@@ -1,7 +1,11 @@
 注意：需要电脑先安装.net 9.0运行时，下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-desktop-9.0.4-windows-x64-installer
 
 ## TODO:
-- 实现PDF拆分功能
+
+
+## 20250414 V1.0.2
+- 修复了合并PDF时，PDF文件顺序错乱的问题
+- 实现了PDF拆分功能
 
 ## 20250414 V1.0.1
 - 精简了项目代码

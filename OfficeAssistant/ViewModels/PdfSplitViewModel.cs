@@ -12,10 +12,36 @@ namespace OfficeAssistant.ViewModels
 {
     public class PdfSplitViewModel : ViewModelBase
     {
+        private string _statusMessage = "";
+        private string _pageRange = "";
+        private bool _isSplitByPage = true;
+        private string _outputPath = "";
+
         public ObservableCollection<string> SelectedFiles { get; } = new();
-        public bool IsSplitByPage { get; set; } = true;
-        public string PageRange { get; set; } = "";
-        public string OutputPath { get; set; } = "";
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set => SetField(ref _statusMessage, value);
+        }
+
+        public string PageRange
+        {
+            get => _pageRange;
+            set => SetField(ref _pageRange, value);
+        }
+
+        public bool IsSplitByPage
+        {
+            get => _isSplitByPage;
+            set => SetField(ref _isSplitByPage, value);
+        }
+
+        public string OutputPath
+        {
+            get => _outputPath;
+            set => SetField(ref _outputPath, value);
+        }
 
         public async Task SelectFiles()
         {
@@ -39,7 +65,7 @@ namespace OfficeAssistant.ViewModels
             }
         }
 
-        public void RemoveFile(string file)
+        public void RemoveFile(string file)  // 移除 async 关键字，因为这是同步操作
         {
             SelectedFiles.Remove(file);
         }
@@ -62,51 +88,64 @@ namespace OfficeAssistant.ViewModels
         {
             if (SelectedFiles.Count == 0) return;
 
-            foreach (var file in SelectedFiles)
+            try
             {
-                using var document = PdfReader.Open(file, PdfDocumentOpenMode.Import);
-                var outputFolder = string.IsNullOrEmpty(OutputPath) 
-                    ? Path.Combine(Path.GetDirectoryName(file) ?? "", "Split_" + Path.GetFileNameWithoutExtension(file))  // 修改这里，处理 null
-                    : OutputPath;
-                
-                Directory.CreateDirectory(outputFolder);
-
-                if (IsSplitByPage)
+                await Task.Run(() =>
                 {
-                    // 每页拆分为单独的PDF
-                    for (int i = 0; i < document.PageCount; i++)
-                    {
-                        using var output = new PdfDocument();
-                        output.AddPage(document.Pages[i]);
-                        output.Save(Path.Combine(outputFolder, $"page_{i + 1}.pdf"));
-                    }
-                }
-                else
-                {
-                    // 按页码范围拆分
-                    var ranges = PageRange.Split(',');
-                    foreach (var range in ranges)
-                    {
-                        var parts = range.Split('-');
-                        int start = int.Parse(parts[0]);
-                        int end = parts.Length > 1 ? int.Parse(parts[1]) : start;
+                    // 如果没有设置输出目录，创建默认的"拆分文件"文件夹
+                    var defaultOutputFolder = string.IsNullOrEmpty(OutputPath)
+                        ? Path.Combine(Path.GetDirectoryName(SelectedFiles[0]) ?? "", "拆分文件")
+                        : OutputPath;
+                    
+                    Directory.CreateDirectory(defaultOutputFolder);
 
-                        using var output = new PdfDocument();
-                        for (int i = start - 1; i < end && i < document.PageCount; i++)
+                    foreach (var file in SelectedFiles)
+                    {
+                        using var document = PdfReader.Open(file, PdfDocumentOpenMode.Import);
+                        var baseFileName = Path.GetFileNameWithoutExtension(file);
+
+                        if (IsSplitByPage)
                         {
-                            output.AddPage(document.Pages[i]);
+                            // 每页拆分为单独的PDF
+                            for (int i = 0; i < document.PageCount; i++)
+                            {
+                                using var output = new PdfDocument();
+                                output.AddPage(document.Pages[i]);
+                                output.Save(Path.Combine(defaultOutputFolder, $"{baseFileName}_page_{i + 1}.pdf"));
+                            }
                         }
-                        output.Save(Path.Combine(outputFolder, $"pages_{start}-{end}.pdf"));
+                        else if (!string.IsNullOrWhiteSpace(PageRange))
+                        {
+                            // 按页码范围拆分
+                            var ranges = PageRange.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var range in ranges)
+                            {
+                                var parts = range.Trim().Split('-');
+                                if (int.TryParse(parts[0], out int start))
+                                {
+                                    int end = parts.Length > 1 && int.TryParse(parts[1], out int e) ? e : start;
+                                    
+                                    if (start > 0 && end >= start && start <= document.PageCount)
+                                    {
+                                        using var output = new PdfDocument();
+                                        for (int i = start - 1; i < end && i < document.PageCount; i++)
+                                        {
+                                            output.AddPage(document.Pages[i]);
+                                        }
+                                        output.Save(Path.Combine(defaultOutputFolder, $"{baseFileName}_pages_{start}-{end}.pdf"));
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
+                });
+                
+                StatusMessage = "PDF拆分完成！";
             }
-
-            await ShowMessage("PDF拆分完成！");
-        }
-
-        private async Task ShowMessage(string message)
-        {
-            await MessageBox.Show(App.MainWindow, "提示", message, MessageBox.MessageBoxButtons.Ok);
+            catch (Exception ex)
+            {
+                StatusMessage = $"拆分失败：{ex.Message}";
+            }
         }
     }
 }
