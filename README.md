@@ -1,6 +1,3 @@
-我来帮你更新 README.md 文件，添加 PDF 拆分功能的说明：
-
-```markdown:f:\Code\OfficeAssistant\OfficeAssistant\README.md
 # Office Assistant
 
 一个基于 Avalonia UI 开发的跨平台办公助手工具。
@@ -22,14 +19,13 @@
 
 ## 开发环境要求
 
-- .NET 9.0 SDK
+- .NET 8.0 SDK
 - Visual Studio 2022 或其他支持 .NET 的 IDE
 
 ## 使用的技术
 
 - Avalonia UI 11.2.1
 - PdfSharpCore
-- Semi.Avalonia（UI 美化）
 
 ## 快速开始
 
@@ -45,30 +41,34 @@ cd OfficeAssistant
 
 3. 构建项目
 ```bash
-dotnet clean # 清理解决方案
+# dotnet clean # 清理解决方案
 dotnet build
-dotnet build -c Release # 构建项目
+# dotnet build -c Release # 构建项目
 ```
 
 4. 运行应用
 ```bash
 dotnet run
 ```
+
 5. 发布应用
 ```bash
 # 发布 Windows 版本，不含.NET 运行时
 dotnet publish -c Release -r win-x64 --no-self-contained
+#  修改OfficeAssistant\OfficeAssistant.csproj中的参数
+# 当<PublishSingleFile>true</PublishSingleFile>，改为true时，可以打包为一个单独的可执行文件
 ```
+
 ## 使用说明
 
-### PDF 合并
+### PDF 批量合并
 1. 启动应用程序
 2. 在左侧导航栏选择"PDF合并"
 3. 点击"选择PDF文件"按钮选择需要合并的PDF文件
 4. 在文件列表中查看和管理已选文件
 5. 点击"合并PDF"按钮选择保存位置并完成合并
 
-### PDF 拆分
+### PDF 批量拆分
 1. 在左侧导航栏选择"PDF拆分"
 2. 点击"选择PDF文件"按钮选择需要拆分的PDF文件
 3. 选择拆分模式：
@@ -78,6 +78,13 @@ dotnet publish -c Release -r win-x64 --no-self-contained
    - 若未设置，将在原文件所在目录创建"拆分文件"文件夹
 5. 点击"开始拆分"按钮完成拆分
 
+## 运行环境要求
+
+- Windows 10/11
+- .NET 8.0 运行时
+  - 下载地址：[.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)，下载自己系统的.NET 8 运行时即可。
+![.NET8运行时](https://lei-1258171996.cos.ap-guangzhou.myqcloud.com/imgs/2024/202504142154045.jpg)
+
 ## 许可证
 
 MIT License
@@ -85,10 +92,3 @@ MIT License
 ## 贡献指南
 
 欢迎提交 Issue 和 Pull Request。
-```
-
-主要更新内容：
-1. 添加了 PDF 拆分功能的详细说明
-2. 添加了 Semi.Avalonia 到使用的技术列表
-3. 将使用说明分为 PDF 合并和 PDF 拆分两个部分
-4. 补充了更详细的操作步骤说明
