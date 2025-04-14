@@ -55,7 +55,7 @@ public partial class MainWindow : Window
         {
             Title = "保存合并后的PDF",
             DefaultExtension = "pdf",
-            FileTypeChoices = new[] { FilePickerFileTypes.Pdf }
+            FileTypeChoices = [FilePickerFileTypes.Pdf]
         });
 
         if (file == null) return;

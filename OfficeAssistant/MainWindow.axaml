@@ -3,7 +3,7 @@
         xmlns:views="clr-namespace:OfficeAssistant.Views"
         x:Class="OfficeAssistant.MainWindow"
         Title="Office Assistant"
-        Icon="/images/ai.ico"
+        Icon="/Resources/ai.ico"
         Width="800" Height="600">
     <Grid>
         <Grid.ColumnDefinitions>
