@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OfficeAssistant.Views.MainWindow"
+        Title="Office Assistant">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧导航栏 -->
+        <ListBox Grid.Column="0" 
+                 Background="#383838"
+                 SelectedIndex="0"
+                 SelectionChanged="OnNavigationChanged">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Padding" Value="20,10"/>
+                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                </Style>
+                <Style Selector="ListBoxItem:selected">
+                    <Setter Property="Foreground" Value="#50A0C3"/>
+                </Style>
+                <Style Selector="ListBoxItem:pointerover">
+                    <Setter Property="Foreground" Value="#2D2D2D"/>
+                </Style>
+            </ListBox.Styles>
+            
+            <ListBoxItem Content="PDF合并"/>
+            <ListBoxItem Content="PDF拆分"/>
+        </ListBox>
+
+        <!-- 右侧内容区域 -->
+        <ContentControl Grid.Column="1" 
+                        x:Name="ContentArea"/>
+    </Grid>
+</Window>
