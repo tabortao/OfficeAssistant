@@ -45,14 +45,20 @@ cd OfficeAssistant
 
 3. 构建项目
 ```bash
+dotnet clean # 清理解决方案
 dotnet build
+dotnet build -c Release # 构建项目
 ```
 
 4. 运行应用
 ```bash
 dotnet run
 ```
-
+5. 发布应用
+```bash
+# 发布 Windows 版本，不含.NET 运行时
+dotnet publish -c Release -r win-x64 --no-self-contained
+```
 ## 使用说明
 
 ### PDF 合并
