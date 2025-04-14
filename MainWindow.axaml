@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OfficeAssistant.MainWindow"
+        Title="办公助手"
+        Width="900"
+        Height="650"
+        DragDrop.AllowDrop="True">
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="220,*">
+        <!-- 左侧导航栏 -->
+        <ListBox Grid.Column="0" Name="NavList" Background="#f0f0f0">
+            <ListBoxItem Content="PDF合并" IsSelected="True"/>
+        </ListBox>
+        
+        <!-- 右侧内容区域 -->
+        <Grid Grid.Column="1" Margin="20" RowDefinitions="Auto,*,Auto">
+            <!-- PDF合并界面 -->
+            <StackPanel Grid.Row="0" Spacing="10">
+                <TextBlock Text="将PDF文件拖放到下方区域，或点击按钮选择文件" Margin="0,0,0,10"/>
+                <Button Name="SelectFilesButton" Content="选择PDF文件"/>
+            </StackPanel>
+            
+            <!-- 文件列表 -->
+            <Border Grid.Row="1" 
+                    Margin="0,10"
+                    BorderBrush="#ccc"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    DragDrop.AllowDrop="True">
+                <ListBox Name="FileList" Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding FileName}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" 
+                                        Content="删除" 
+                                        Command="{Binding $parent[Window].DeleteFile}"
+                                        CommandParameter="{Binding}"
+                                        Margin="10,0,0,0"
+                                        Padding="8,4"
+                                        Background="#d83b01"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+            
+            <!-- 底部操作区 -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <TextBlock Name="StatusMessage" VerticalAlignment="Center"/>
+                <Button Name="MergeButton" Content="合并PDF" IsEnabled="False"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
