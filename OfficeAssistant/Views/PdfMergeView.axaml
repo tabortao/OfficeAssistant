@@ -9,7 +9,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Button Content="选择PDF文件" Click="SelectFiles"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+            <Button Content="选择PDF文件" Click="SelectFiles"/>
+            <Button Content="清除所选PDF文件" Click="ClearAllFiles"/>
+        </StackPanel>
 
         <ListBox Grid.Row="1" 
                  ItemsSource="{Binding SelectedFiles}"

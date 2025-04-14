@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;  // 添加这行，用于 EqualityComparer
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OfficeAssistant.ViewModels
 {
@@ -19,6 +21,13 @@ namespace OfficeAssistant.ViewModels
             field = value;
             OnPropertyChanged(propertyName);
             return true;
+        }
+
+        protected async Task ShowTemporaryMessage(string message, Action<string> setMessage, int duration = 5000)
+        {
+            setMessage(message);
+            await Task.Delay(duration);
+            setMessage("");
         }
     }
 }

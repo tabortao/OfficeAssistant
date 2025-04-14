@@ -1,3 +1,4 @@
+using System;  // 添加这行，用于 Exception
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
@@ -48,28 +49,40 @@ namespace OfficeAssistant.ViewModels
         {
             if (SelectedFiles.Count < 2) return;
 
-            var storageProvider = App.MainWindow.StorageProvider;
-            var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            try
             {
-                Title = "保存合并后的PDF",
-                DefaultExtension = "pdf",
-                FileTypeChoices = new[] { new FilePickerFileType("PDF Files") { Patterns = new[] { "*.pdf" } } }
-            });
-
-            if (file != null)
-            {
-                using var output = new PdfDocument();
-                foreach (var pdfFile in SelectedFiles)
+                var storageProvider = App.MainWindow.StorageProvider;
+                var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
                 {
-                    using var document = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
-                    for (int i = 0; i < document.PageCount; i++)
+                    Title = "保存合并后的PDF",
+                    DefaultExtension = "pdf",
+                    FileTypeChoices = new[] { new FilePickerFileType("PDF Files") { Patterns = new[] { "*.pdf" } } }
+                });
+
+                if (file != null)
+                {
+                    using var output = new PdfDocument();
+                    foreach (var pdfFile in SelectedFiles)
                     {
-                        output.AddPage(document.Pages[i]);
+                        using var document = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+                        for (int i = 0; i < document.PageCount; i++)
+                        {
+                            output.AddPage(document.Pages[i]);
+                        }
                     }
+                    output.Save(file.Path.LocalPath);
+                    await ShowTemporaryMessage("PDF合并完成！", message => StatusMessage = message);
                 }
-                output.Save(file.Path.LocalPath);
-                StatusMessage = "PDF合并完成！";
             }
+            catch (Exception ex)
+            {
+                await ShowTemporaryMessage($"合并失败：{ex.Message}", message => StatusMessage = message);
+            }
+        }
+
+        public void ClearAllFiles()
+        {
+            SelectedFiles.Clear();
         }
     }
 }

@@ -37,5 +37,10 @@ namespace OfficeAssistant.Views
         {
             await _viewModel.SplitFiles();
         }
+
+        private void ClearAllFiles(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ClearAllFiles();
+        }
     }
 }

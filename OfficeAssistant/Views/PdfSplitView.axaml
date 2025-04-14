@@ -14,6 +14,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
             <Button Content="选择PDF文件" Click="SelectFiles"/>
             <Button Content="选择输出目录" Click="SelectOutputPath"/>
+            <Button Content="清除所选PDF文件" Click="ClearAllFiles"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Margin="0,10">

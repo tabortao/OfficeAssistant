@@ -70,6 +70,11 @@ namespace OfficeAssistant.ViewModels
             SelectedFiles.Remove(file);
         }
 
+        public void ClearAllFiles()
+        {
+            SelectedFiles.Clear();
+        }
+
         public async Task SelectOutputPath()
         {
             var storageProvider = App.MainWindow.StorageProvider;
@@ -140,11 +145,11 @@ namespace OfficeAssistant.ViewModels
                     }
                 });
                 
-                StatusMessage = "PDF拆分完成！";
+                await ShowTemporaryMessage("PDF拆分完成！", message => StatusMessage = message);
             }
             catch (Exception ex)
             {
-                StatusMessage = $"拆分失败：{ex.Message}";
+                await ShowTemporaryMessage($"拆分失败：{ex.Message}", message => StatusMessage = message);
             }
         }
     }

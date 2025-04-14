@@ -32,5 +32,10 @@ namespace OfficeAssistant.Views
         {
             await _viewModel.MergeFiles();
         }
+
+        private void ClearAllFiles(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ClearAllFiles();
+        }
     }
 }
