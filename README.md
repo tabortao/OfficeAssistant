@@ -55,8 +55,8 @@ dotnet run
 ```bash
 # 发布 Windows 版本，不含.NET 运行时
 dotnet publish -c Release -r win-x64 --no-self-contained
-#  修改OfficeAssistant\OfficeAssistant.csproj中的参数
-# 当<PublishSingleFile>true</PublishSingleFile>，改为true时，可以打包为一个单独的可执行文件
+# 将应用程序打包为单个可执行文件（.exe）
+dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile=true
 ```
 
 ## 使用说明
