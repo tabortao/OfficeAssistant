@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OfficeAssistant.Views.PdfSplitView">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+            <Button Content="选择PDF文件" Click="SelectFiles"/>
+            <Button Content="选择输出目录" Click="SelectOutputPath"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,10">
+            <RadioButton Content="每页拆分为单独PDF" 
+                        IsChecked="{Binding IsSplitByPage}"
+                        GroupName="SplitMode"/>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <RadioButton Content="按页码范围拆分" 
+                            IsChecked="{Binding !IsSplitByPage}"
+                            GroupName="SplitMode"/>
+                <TextBox Width="200" 
+                         Text="{Binding PageRange}"
+                         Watermark="例如: 1-3,5,7-9"
+                         IsEnabled="{Binding !IsSplitByPage}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <ListBox Grid.Row="2" 
+                 ItemsSource="{Binding SelectedFiles}"
+                 Margin="0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding}" />
+                        <Button Grid.Column="1" 
+                                Content="删除"
+                                Click="RemoveFile"
+                                CommandParameter="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="3" 
+                   Text="{Binding OutputPath}"
+                   Margin="0,10"/>
+
+        <Button Grid.Row="4" 
+                Content="开始拆分" 
+                Click="SplitFiles"
+                IsEnabled="{Binding SelectedFiles.Count}"
+                HorizontalAlignment="Right"/>
+    </Grid>
+</UserControl>

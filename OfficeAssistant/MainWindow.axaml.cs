@@ -128,4 +128,24 @@ public partial class MainWindow : Window
             RemoveFile(file);
         }
     }
+
+    private void OnNavigationSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListBox listBox && listBox.SelectedItem is ListBoxItem selectedItem)
+        {
+            var pdfMergeView = this.GetControl<UserControl>("PdfMergeView");
+            var pdfSplitView = this.GetControl<UserControl>("PdfSplitView");
+
+            if (selectedItem.Content?.ToString() == "PDF合并")
+            {
+                if (pdfMergeView != null) pdfMergeView.IsVisible = true;
+                if (pdfSplitView != null) pdfSplitView.IsVisible = false;
+            }
+            else if (selectedItem.Content?.ToString() == "PDF拆分")
+            {
+                if (pdfMergeView != null) pdfMergeView.IsVisible = false;
+                if (pdfSplitView != null) pdfSplitView.IsVisible = true;
+            }
+        }
+    }
 }

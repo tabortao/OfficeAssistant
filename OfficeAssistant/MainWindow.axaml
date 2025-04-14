@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:OfficeAssistant.Views"
         x:Class="OfficeAssistant.MainWindow"
         Title="Office Assistant"
         Icon="/images/ai.ico"
@@ -10,61 +11,18 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- 左侧导航栏 -->
         <Border Grid.Column="0" 
                 BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"
                 BorderThickness="0,0,1,0">
-            <ListBox>
+            <ListBox x:Name="NavigationList" SelectionChanged="OnNavigationSelectionChanged">
                 <ListBoxItem Content="PDF合并" IsSelected="True" />
+                <ListBoxItem Content="PDF拆分" />
             </ListBox>
         </Border>
 
-        <!-- 右侧内容区域 -->
-        <Grid Grid.Column="1" Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <Button Content="选择PDF文件" 
-                    Click="SelectFiles"
-                    HorizontalAlignment="Left"
-                    Margin="0,0,0,10"/>
-
-            <ListBox Grid.Row="1" 
-                     ItemsSource="{Binding SelectedFiles}"
-                     Margin="0,0,0,10">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding}" />
-                            <Button Grid.Column="1" 
-                                    Content="删除"
-                                    Click="RemoveFile"
-                                    CommandParameter="{Binding}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <!-- 添加消息提示区域 -->
-            <TextBlock x:Name="MessageText"
-                       Grid.Row="2"
-                       Margin="0,0,0,10"
-                       Foreground="Green"
-                       Opacity="0"/>
-
-            <Button Grid.Row="3" 
-                    Content="合并PDF" 
-                    Click="MergeFiles"
-                    IsEnabled="{Binding SelectedFiles.Count}"
-                    HorizontalAlignment="Right"/>
+        <Grid Grid.Column="1" x:Name="ContentArea">
+            <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
+            <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
         </Grid>
     </Grid>
 </Window>

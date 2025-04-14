@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OfficeAssistant.Views.PdfMergeView">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="选择PDF文件" Click="SelectFiles"/>
+
+        <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding SelectedFiles}"
+                 Margin="0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding}" />
+                        <Button Grid.Column="1" 
+                                Content="删除"
+                                Click="RemoveFile"
+                                CommandParameter="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Grid.Row="2" 
+                Content="合并PDF" 
+                Click="MergeFiles"
+                IsEnabled="{Binding SelectedFiles.Count}"
+                HorizontalAlignment="Right"/>
+    </Grid>
+</UserControl>
