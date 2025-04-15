@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;  // 添加这行
+using Avalonia.Platform.Storage;  
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
 
@@ -15,7 +15,7 @@ namespace OfficeAssistant.ViewModels
         private bool _isSplitByPage = true;
         private string _outputPath = "";
 
-        public ObservableCollection<string> SelectedFiles { get; } = new();
+        public ObservableCollection<string> SelectedFiles { get; } = [];
 
         public string StatusMessage
         {
@@ -47,7 +47,7 @@ namespace OfficeAssistant.ViewModels
             var files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 AllowMultiple = true,
-                FileTypeFilter = new[] { new FilePickerFileType("PDF Files") { Patterns = new[] { "*.pdf" } } }
+                FileTypeFilter = [new FilePickerFileType("PDF Files") { Patterns = ["*.pdf"] }]
             });
 
             if (files != null && files.Count > 0)  // 修改这里，避免 null 引用

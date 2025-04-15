@@ -30,7 +30,7 @@ public partial class MainWindow : Window
         {
             Title = "选择PDF文件",
             AllowMultiple = true,
-            FileTypeFilter = new[] { FilePickerFileTypes.Pdf }
+            FileTypeFilter = [FilePickerFileTypes.Pdf]
         });
 
         foreach (var file in files)

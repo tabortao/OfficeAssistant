@@ -24,7 +24,7 @@ namespace OfficeAssistant.ViewModels
             var files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 AllowMultiple = true,
-                FileTypeFilter = new[] { new FilePickerFileType("PDF Files") { Patterns = new[] { "*.pdf" } } }
+                FileTypeFilter = [new("PDF Files") { Patterns = ["*.pdf"] }]
             });
 
             if (files != null && files.Count > 0)

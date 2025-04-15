@@ -23,7 +23,7 @@ namespace OfficeAssistant.ViewModels
             return true;
         }
 
-        protected async Task ShowTemporaryMessage(string message, Action<string> setMessage, int duration = 5000)
+        protected static async Task ShowTemporaryMessage(string message, Action<string> setMessage, int duration = 5000)
         {
             setMessage(message);
             await Task.Delay(duration);
