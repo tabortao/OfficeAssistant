@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OfficeAssistant.Views.PdfReplaceView">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" 
+                   Text="源PDF文件（将被替换页面的文件）" 
+                   FontWeight="Bold"
+                   Margin="0,0,0,5"/>
+                   
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+            <Button Content="选择源PDF文件" Click="SelectSourceFiles"/>
+            <Button Content="清除源PDF文件" Click="ClearSourceFiles"/>
+        </StackPanel>
+
+        <ListBox Grid.Row="2" 
+                 ItemsSource="{Binding SourceFiles}"
+                 Margin="0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding}" />
+                        <Button Grid.Column="1" 
+                                Content="删除"
+                                Click="RemoveSourceFile"
+                                CommandParameter="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="3" 
+                   Text="替换PDF文件（用于替换的文件）" 
+                   FontWeight="Bold"
+                   Margin="0,10,0,5"/>
+                   
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+            <TextBlock Text="替换页码:" VerticalAlignment="Center"/>
+            <TextBox Width="50" Text="{Binding PageNumber}" Watermark="页码"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
+            <Button Content="选择替换PDF文件" Click="SelectReplacementFiles"/>
+            <Button Content="清除替换PDF文件" Click="ClearReplacementFiles"/>
+        </StackPanel>
+
+        <ListBox Grid.Row="4" 
+                 ItemsSource="{Binding ReplacementFiles}"
+                 Margin="0,40,0,0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding}" />
+                        <Button Grid.Column="1" 
+                                Content="删除"
+                                Click="RemoveReplacementFile"
+                                CommandParameter="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="5" 
+                   Text="{Binding StatusMessage}"
+                   Margin="0,10"
+                   Foreground="Green"/>
+
+        <Button Grid.Row="6" 
+                Content="开始替换" 
+                Click="ReplacePages"
+                IsEnabled="{Binding SourceFiles.Count}"
+                HorizontalAlignment="Right"/>
+    </Grid>
+</UserControl>

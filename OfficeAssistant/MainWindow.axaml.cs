@@ -126,21 +126,23 @@ public partial class MainWindow : Window
 
     private void OnNavigationSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ListBox listBox && listBox.SelectedItem is ListBoxItem selectedItem)
+        if (NavigationList.SelectedIndex == 0)
         {
-            var pdfMergeView = this.GetControl<UserControl>("PdfMergeView");
-            var pdfSplitView = this.GetControl<UserControl>("PdfSplitView");
-
-            if (selectedItem.Content?.ToString() == "PDF批量合并")
-            {
-                if (pdfMergeView != null) pdfMergeView.IsVisible = true;
-                if (pdfSplitView != null) pdfSplitView.IsVisible = false;
-            }
-            else if (selectedItem.Content?.ToString() == "PDF批量拆分")
-            {
-                if (pdfMergeView != null) pdfMergeView.IsVisible = false;
-                if (pdfSplitView != null) pdfSplitView.IsVisible = true;
-            }
+            PdfMergeView.IsVisible = true;
+            PdfSplitView.IsVisible = false;
+            PdfReplaceView.IsVisible = false;
+        }
+        else if (NavigationList.SelectedIndex == 1)
+        {
+            PdfMergeView.IsVisible = false;
+            PdfSplitView.IsVisible = true;
+            PdfReplaceView.IsVisible = false;
+        }
+        else if (NavigationList.SelectedIndex == 2)
+        {
+            PdfMergeView.IsVisible = false;
+            PdfSplitView.IsVisible = false;
+            PdfReplaceView.IsVisible = true;
         }
     }
 }

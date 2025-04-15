@@ -1,7 +1,9 @@
 注意：需要电脑先安装.net 9.0运行时，下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-desktop-9.0.4-windows-x64-installer
 
 ## TODO:
-- PDF批量替换
+
+## 20250415 V1.0.7
+- 实现了PDF批量替换功能
 
 ## 20250414 V1.0.6
 - 修改为.net 8运行时

@@ -17,12 +17,14 @@
             <ListBox x:Name="NavigationList" SelectionChanged="OnNavigationSelectionChanged">
                 <ListBoxItem Content="PDF批量合并" IsSelected="True" />
                 <ListBoxItem Content="PDF批量拆分" />
+                <ListBoxItem Content="PDF批量替换" />
             </ListBox>
         </Border>
 
         <Grid Grid.Column="1" x:Name="ContentArea">
             <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
             <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
+            <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
         </Grid>
     </Grid>
 </Window>

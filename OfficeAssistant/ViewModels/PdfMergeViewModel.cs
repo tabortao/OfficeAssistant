@@ -16,7 +16,7 @@ namespace OfficeAssistant.ViewModels
             set => SetField(ref _statusMessage, value);
         }
 
-        public ObservableCollection<string> SelectedFiles { get; } = new();
+        public ObservableCollection<string> SelectedFiles { get; } = [];
 
         public async Task SelectFiles()
         {
