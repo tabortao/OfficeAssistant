@@ -1,17 +1,12 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
 using System.Threading.Tasks;
 using System;
-using System.IO;
-using Avalonia.Controls.Primitives;
+
 
 namespace OfficeAssistant;
 

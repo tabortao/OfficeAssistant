@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using OfficeAssistant.Views;
 
 namespace OfficeAssistant.Views
 {
@@ -12,16 +11,24 @@ namespace OfficeAssistant.Views
 
         private void OnNavigationChanged(object? sender, SelectionChangedEventArgs e)
         {
-            if (ContentArea == null) return;
+            if (this.FindControl<ContentControl>("ContentArea") == null) return;
             
             var index = ((ListBox)sender!).SelectedIndex;
             switch (index)
             {
                 case 0:
-                    ContentArea.Content = new PdfMergeView();
+                    var contentArea = this.FindControl<ContentControl>("ContentArea");
+                    if (contentArea != null)
+                    {
+                        contentArea.Content = new PdfMergeView();
+                    }
                     break;
                 case 1:
-                    ContentArea.Content = new PdfSplitView();
+                    var contentArea2 = this.FindControl<ContentControl>("ContentArea");
+                    if (contentArea2 != null)
+                    {
+                        contentArea2.Content = new PdfSplitView();
+                    }
                     break;
             }
         }

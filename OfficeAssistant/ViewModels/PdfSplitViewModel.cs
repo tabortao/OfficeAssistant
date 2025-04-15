@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Platform.Storage;  // 添加这行
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
