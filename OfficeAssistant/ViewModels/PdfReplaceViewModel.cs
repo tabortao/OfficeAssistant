@@ -1,10 +1,10 @@
+using Avalonia.Platform.Storage;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.IO;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;
-using PdfSharpCore.Pdf;
-using PdfSharpCore.Pdf.IO;
 
 namespace OfficeAssistant.ViewModels
 {
@@ -12,7 +12,7 @@ namespace OfficeAssistant.ViewModels
     {
         private string _statusMessage = "";
         private string _pageNumber = "1";
-        
+
         public ObservableCollection<string> SourceFiles { get; } = [];
         public ObservableCollection<string> ReplacementFiles { get; } = [];
 
@@ -121,41 +121,41 @@ namespace OfficeAssistant.ViewModels
                     {
                         string sourceFile = SourceFiles[i];
                         string replacementFile = ReplacementFiles[i];
-                        
+
                         // 打开源文件
                         using var sourceDoc = PdfReader.Open(sourceFile, PdfDocumentOpenMode.Import);
                         // 打开替换文件
                         using var replacementDoc = PdfReader.Open(replacementFile, PdfDocumentOpenMode.Import);
-                        
+
                         // 检查页码是否有效
                         if (pageIndex > sourceDoc.PageCount)
                         {
                             throw new Exception($"文件 {Path.GetFileName(sourceFile)} 的页数少于 {pageIndex}");
                         }
-                        
+
                         if (replacementDoc.PageCount == 0)
                         {
                             throw new Exception($"替换文件 {Path.GetFileName(replacementFile)} 没有页面");
                         }
-                        
+
                         // 创建新文档
                         using var outputDoc = new PdfDocument();
-                        
+
                         // 复制源文档的所有页面到新文档
                         for (int j = 0; j < sourceDoc.PageCount; j++)
                         {
                             outputDoc.AddPage(sourceDoc.Pages[j]);
                         }
-                        
+
                         // 替换指定页面
                         outputDoc.Pages.Remove(outputDoc.Pages[pageIndex - 1]);
                         outputDoc.Pages.Insert(pageIndex - 1, replacementDoc.Pages[0]);
-                        
+
                         // 直接覆盖源文件
                         outputDoc.Save(sourceFile);
                     }
                 });
-                
+
                 await ShowTemporaryMessage("PDF页面替换完成！源文件已被覆盖", message => StatusMessage = message);
             }
             catch (Exception ex)

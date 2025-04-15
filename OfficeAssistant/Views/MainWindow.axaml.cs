@@ -12,7 +12,7 @@ namespace OfficeAssistant.Views
         private void OnNavigationChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (this.FindControl<ContentControl>("ContentArea") == null) return;
-            
+
             var index = ((ListBox)sender!).SelectedIndex;
             switch (index)
             {

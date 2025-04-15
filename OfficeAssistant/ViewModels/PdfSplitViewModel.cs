@@ -1,10 +1,10 @@
+using Avalonia.Platform.Storage;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.IO;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;  
-using PdfSharpCore.Pdf;
-using PdfSharpCore.Pdf.IO;
 
 namespace OfficeAssistant.ViewModels
 {
@@ -99,7 +99,7 @@ namespace OfficeAssistant.ViewModels
                     var defaultOutputFolder = string.IsNullOrEmpty(OutputPath)
                         ? Path.Combine(Path.GetDirectoryName(SelectedFiles[0]) ?? "", "拆分文件")
                         : OutputPath;
-                    
+
                     Directory.CreateDirectory(defaultOutputFolder);
 
                     foreach (var file in SelectedFiles)
@@ -127,7 +127,7 @@ namespace OfficeAssistant.ViewModels
                                 if (int.TryParse(parts[0], out int start))
                                 {
                                     int end = parts.Length > 1 && int.TryParse(parts[1], out int e) ? e : start;
-                                    
+
                                     if (start > 0 && end >= start && start <= document.PageCount)
                                     {
                                         using var output = new PdfDocument();
@@ -142,7 +142,7 @@ namespace OfficeAssistant.ViewModels
                         }
                     }
                 });
-                
+
                 await ShowTemporaryMessage("PDF拆分完成！", message => StatusMessage = message);
             }
             catch (Exception ex)
