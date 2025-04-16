@@ -1,7 +1,8 @@
+# 构建 Windows 桌面版 (Avalonia UI)
 name: Build Windows Desktop (Avalonia UI)
-
+# 触发条件 允许手动触发工作流
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
     inputs:
       release_tag:
         required: false
@@ -9,7 +10,7 @@ on:
   push:
     branches:
       - main
-
+# 环境变量
 env:
   OutputPath64: "${{ github.workspace }}/OfficeAssistant/bin/Release/windows-x64"
   OutputPathArm64: "${{ github.workspace }}/OfficeAssistant/bin/Release/windows-arm64"
@@ -33,6 +34,7 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+ # 从项目文件获取版本号
     - name: Get Version
       id: version
       shell: pwsh
@@ -41,6 +43,7 @@ jobs:
         $version = $xml.Project.PropertyGroup.Version
         echo "version=$version" >> $env:GITHUB_OUTPUT
 
+    # 构建 x64 版本
     - name: Build x64
       run: |
         dotnet publish OfficeAssistant/OfficeAssistant.csproj `
@@ -52,7 +55,14 @@ jobs:
         -p:DebugType=None `
         -p:DebugSymbols=false `
         -o "${{ env.OutputPath64 }}"
+#         --self-contained true `               # 包含运行时
+#         -p:PublishSingleFile=true `           # 发布为单文件
+#         -p:EnableCompressionInSingleFile=true ` # 启用单文件压缩
+#         -p:DebugType=None `                   # 不包含调试信息
+#         -p:DebugSymbols=false `              # 不包含调试符号
+#         -o "${{ env.OutputPath64 }}"         # 输出目录
 
+    # 构建 ARM64 版本
     - name: Build ARM64
       run: |
         dotnet publish OfficeAssistant/OfficeAssistant.csproj `
@@ -65,24 +75,60 @@ jobs:
         -p:DebugSymbols=false `
         -o "${{ env.OutputPathArm64 }}"
 
+    # 构建 x64 框架依赖版本（不含运行时）
+    - name: Build x64 Framework-dependent
+      run: |
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj `
+        -c Release `
+        -r win-x64 `
+        --self-contained false `
+        -p:PublishSingleFile=true `
+        -p:EnableCompressionInSingleFile=true `
+        -p:DebugType=None `
+        -p:DebugSymbols=false `
+        -o "${{ env.OutputPath64 }}-framework"
+
+    # 创建 ZIP 压缩包
     - name: Create ZIP archives
       shell: pwsh
       run: |
         Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip"
+        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip"
         Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip"
 
-    - name: Upload artifacts
+    # 上传 x64 自包含版本构建产物
+    - name: Upload x64 self-contained artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: OfficeAssistant-Windows-v${{ steps.version.outputs.version }}
-        path: OfficeAssistant-windows-*.zip
+        name: OfficeAssistant-Windows-x64-v${{ steps.version.outputs.version }}
+        path: OfficeAssistant-windows-x64-v*.zip
         if-no-files-found: error
 
+    # 上传 x64 框架依赖版本构建产物
+    - name: Upload x64 framework-dependent artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-x64-Framework-v${{ steps.version.outputs.version }}
+        path: OfficeAssistant-windows-x64-framework-*.zip
+        if-no-files-found: error
+
+    # 上传 ARM64 构建产物
+    - name: Upload ARM64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-ARM64-v${{ steps.version.outputs.version }}
+        path: OfficeAssistant-windows-arm64-*.zip
+        if-no-files-found: error
+
+    # 创建 GitHub Release
     - name: Create Release
       if: github.event.inputs.release_tag != ''
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
-        files: OfficeAssistant-windows-*.zip
+        files: |
+          OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip
         prerelease: true
         generate_release_notes: true
