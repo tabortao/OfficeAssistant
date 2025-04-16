@@ -1,115 +1,88 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: .NET Core Desktop  # 工作流名称
 
-# This workflow will build, test, sign and package a WPF or Windows Forms desktop application
-# built on .NET Core.
-# To learn how to migrate your existing application to .NET Core,
-# refer to https://docs.microsoft.com/en-us/dotnet/desktop-wpf/migration/convert-project-from-net-framework
-#
-# To configure this workflow:
-#
-# 1. Configure environment variables
-# GitHub sets default environment variables for every workflow run.
-# Replace the variables relative to your project in the "env" section below.
-#
-# 2. Signing
-# Generate a signing certificate in the Windows Application
-# Packaging Project or add an existing signing certificate to the project.
-# Next, use PowerShell to encode the .pfx file using Base64 encoding
-# by running the following Powershell script to generate the output string:
-#
-# $pfx_cert = Get-Content '.\SigningCertificate.pfx' -Encoding Byte
-# [System.Convert]::ToBase64String($pfx_cert) | Out-File 'SigningCertificate_Encoded.txt'
-#
-# Open the output file, SigningCertificate_Encoded.txt, and copy the
-# string inside. Then, add the string to the repo as a GitHub secret
-# and name it "Base64_Encoded_Pfx."
-# For more information on how to configure your signing certificate for
-# this workflow, refer to https://github.com/microsoft/github-actions-for-desktop-apps#signing
-#
-# Finally, add the signing certificate password to the repo as a secret and name it "Pfx_Key".
-# See "Build the Windows Application Packaging project" below to see how the secret is used.
-#
-# For more information on GitHub Actions, refer to https://github.com/features/actions
-# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
-# refer to https://github.com/microsoft/github-actions-for-desktop-apps
+on:  # 触发工作流的事件
+  push:  # 当代码推送时触发
+    branches: [ "main" ]  # 仅在 main 分支上触发
+  pull_request:  # 当创建 Pull Request 时触发
+    branches: [ "main" ]  # 仅针对 main 分支的 PR
 
-name: .NET Core Desktop
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-
-  build:
-
+jobs:  # 定义工作流中的作业
+  build-windows:  # Windows 构建作业
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [Release]  # 只构建 Release 版本
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest  # 在最新版本的 Windows 运行器上运行
 
-    env:
-      Solution_Name: your-solution-name                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-      Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
-      Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+    env:  # 环境变量设置
+      Solution_Name: OfficeAssistant.sln  # 解决方案文件名
 
-    steps:
-    - name: Checkout
+    steps:  # 构建步骤
+    - name: Checkout  # 检出代码
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0  # 获取完整的版本历史
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
+    - name: Install .NET Core  # 安装 .NET Core SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 8.0.x  # 使用 .NET 8.0 版本
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+    - name: Restore dependencies  # 还原项目依赖
+      run: dotnet restore
 
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
+    - name: Build (Framework-dependent)  # 构建依赖框架的版本
+      run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    - name: Build (Self-contained)  # 构建自包含版本
+      run: dotnet build --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true
 
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
-      run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
-        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-
-    # Create the app package by building and packaging the Windows Application Packaging project
-    - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-      env:
-        Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
-        Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{ matrix.configuration }}
-
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
-
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
+    - name: Upload Framework-dependent artifacts  # 上传依赖框架的构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: MSIX Package
-        path: ${{ env.Wap_Project_Directory }}\AppPackages
+        name: OfficeAssistant-Windows-Framework-dependent  # 构建产物名称
+        path: |  # 构建产物路径
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/**/*
+
+    - name: Upload Self-contained artifacts  # 上传自包含的构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-Self-contained  # 构建产物名称
+        path: |  # 构建产物路径
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/win-x64/**/*
+
+  build-macos:  # macOS 构建作业
+    strategy:
+      matrix:
+        configuration: [Release]  # 只构建 Release 版本
+    
+    runs-on: macos-latest  # 在最新版本的 macOS 运行器上运行
+
+    env:  # 环境变量设置
+      Solution_Name: OfficeAssistant.sln  # 解决方案文件名
+
+    steps:  # 构建步骤
+    - name: Checkout  # 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整的版本历史
+
+    - name: Install .NET Core  # 安装 .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x  # 使用 .NET 8.0 版本
+
+    - name: Restore dependencies  # 还原项目依赖
+      run: dotnet restore
+
+    - name: Build  # 构建项目
+      run: dotnet build --configuration ${{ matrix.configuration }} --no-restore -r osx-x64 --self-contained true
+      # -r osx-x64: 指定目标平台为 macOS x64
+      # --self-contained true: 包含所有运行时依赖
+
+    - name: Upload build artifacts  # 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-macOS-${{ matrix.configuration }}  # macOS 构建产物名称
+        path: |  # 构建产物路径
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/**/*
