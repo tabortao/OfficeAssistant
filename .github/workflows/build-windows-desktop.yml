@@ -76,14 +76,13 @@ jobs:
         -o "${{ env.OutputPathArm64 }}"
 
     # 构建 x64 框架依赖版本（不含运行时）
-    - name: Build x64 Framework-dependent
+    - name: Build x64 NO Framework-dependent
       run: |
         dotnet publish OfficeAssistant/OfficeAssistant.csproj `
         -c Release `
         -r win-x64 `
         --self-contained false `
         -p:PublishSingleFile=true `
-        -p:EnableCompressionInSingleFile=true `
         -p:DebugType=None `
         -p:DebugSymbols=false `
         -o "${{ env.OutputPath64 }}-framework"
