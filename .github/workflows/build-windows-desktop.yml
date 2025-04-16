@@ -1,0 +1,88 @@
+name: Build Windows Desktop (Avalonia UI)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+
+env:
+  OutputPath64: "${{ github.workspace }}/OfficeAssistant/bin/Release/windows-x64"
+  OutputPathArm64: "${{ github.workspace }}/OfficeAssistant/bin/Release/windows-arm64"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Get Version
+      id: version
+      shell: pwsh
+      run: |
+        $xml = [Xml] (Get-Content OfficeAssistant/OfficeAssistant.csproj)
+        $version = $xml.Project.PropertyGroup.Version
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Build x64
+      run: |
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj `
+        -c Release `
+        -r win-x64 `
+        --self-contained true `
+        -p:PublishSingleFile=true `
+        -p:EnableCompressionInSingleFile=true `
+        -p:DebugType=None `
+        -p:DebugSymbols=false `
+        -o "${{ env.OutputPath64 }}"
+
+    - name: Build ARM64
+      run: |
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj `
+        -c Release `
+        -r win-arm64 `
+        --self-contained true `
+        -p:PublishSingleFile=true `
+        -p:EnableCompressionInSingleFile=true `
+        -p:DebugType=None `
+        -p:DebugSymbols=false `
+        -o "${{ env.OutputPathArm64 }}"
+
+    - name: Create ZIP archives
+      shell: pwsh
+      run: |
+        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip"
+        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-v${{ steps.version.outputs.version }}
+        path: OfficeAssistant-windows-*.zip
+        if-no-files-found: error
+
+    - name: Create Release
+      if: github.event.inputs.release_tag != ''
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.event.inputs.release_tag }}
+        files: OfficeAssistant-windows-*.zip
+        prerelease: true
+        generate_release_notes: true
