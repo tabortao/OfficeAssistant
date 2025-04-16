@@ -37,10 +37,40 @@ jobs:  # 定义工作流中的作业
     - name: Build (Framework-dependent)
       run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
 
+    - name: Get Version  # 添加获取版本号的步骤
+      id: version
+      run: |
+        $xml = [Xml] (Get-Content OfficeAssistant/OfficeAssistant.csproj)
+        $version = $xml.Project.PropertyGroup.Version
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build (Framework-dependent)
+      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore
+
     - name: Build (Self-contained)
       run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true
 
-    - name: Upload Framework-dependent artifacts  # 上传依赖框架的构建产物
+    - name: Upload Framework-dependent artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-Framework-v${{ steps.version.outputs.version }}
+        path: |
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/publish/**/*
+
+    - name: Upload Self-contained artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OfficeAssistant-Windows-Self-contained-v${{ steps.version.outputs.version }}
+        path: |
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/win-x64/publish/**/*
+        exclude: |
+          **/*.pdb
+          **/*.xml
+
+    # 删除 Framework-dependent 相关的步骤和上传
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-Framework-dependent  # 构建产物名称
@@ -81,6 +111,12 @@ jobs:  # 定义工作流中的作业
     - name: Restore runtime  # 添加这个新步骤
       run: dotnet restore OfficeAssistant/OfficeAssistant.csproj -r osx-x64
 
+    - name: Get Version
+      id: version
+      run: |
+        VERSION=$(grep -m1 "<Version>" OfficeAssistant/OfficeAssistant.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
     - name: Build
       run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r osx-x64 --self-contained true
       # -r osx-x64: 指定目标平台为 macOS x64
@@ -89,6 +125,6 @@ jobs:  # 定义工作流中的作业
     - name: Upload build artifacts  # 上传构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: OfficeAssistant-macOS-${{ matrix.configuration }}  # macOS 构建产物名称
+        name: OfficeAssistant-macOS-v${{ steps.version.outputs.version }}
         path: |  # 构建产物路径
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/**/*
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/publish/**/*
