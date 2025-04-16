@@ -10,7 +10,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-            <Button Background="#2B579A" Foreground="White">
+            <Button Background="#E6E6E6">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Image Source="/Resources/Upload.png" Width="16" Height="16"/>
                     <TextBlock Text="选择PDF文件" VerticalAlignment="Center"/>
@@ -52,9 +52,13 @@
                    Foreground="Green"/>
 
         <Button Grid.Row="3" 
-                Content="合并PDF" 
                 Click="MergeFiles"
                 IsEnabled="{Binding SelectedFiles.Count}"
-                HorizontalAlignment="Right"/>
+                HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Image Source="/Resources/start.ico" Width="16" Height="16"/>
+                <TextBlock Text="开始合并" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>

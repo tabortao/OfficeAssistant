@@ -13,13 +13,26 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" 
-                   Text="源PDF文件（将被替换页面的文件）" 
-                   FontWeight="Bold"
+                   Text="源PDF文件（将被替换页面的文件）"                    
                    Margin="0,0,0,5"/>
                    
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
-            <Button Content="选择源PDF文件" Click="SelectSourceFiles"/>
-            <Button Content="清除源PDF文件" Click="ClearSourceFiles"/>
+                <Button Background="#E6E6E6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Upload.png" Width="16" Height="16"/>
+                    <TextBlock Text="选择源PDF文件" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>SelectSourceFiles</Button.Click>
+            </Button>
+            <!-- <Button Content="选择源PDF文件" Click="SelectSourceFiles"/> -->
+            <Button Background="#E6E6E6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Delete.png" Width="16" Height="16"/>
+                    <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>ClearSourceFiles</Button.Click>
+            </Button>
+            <!-- <Button Content="清除所选" Click="ClearSourceFiles"/> -->
         </StackPanel>
 
         <ListBox Grid.Row="2" 
@@ -44,7 +57,6 @@
 
         <TextBlock Grid.Row="3" 
                    Text="替换PDF文件（用于替换的文件）" 
-                   FontWeight="Bold"
                    Margin="0,10,0,5"/>
                    
         <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
@@ -53,8 +65,22 @@
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
-            <Button Content="选择替换PDF文件" Click="SelectReplacementFiles"/>
-            <Button Content="清除替换PDF文件" Click="ClearReplacementFiles"/>
+            <Button Background="#E6E6E6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Upload.png" Width="16" Height="16"/>
+                    <TextBlock Text="选择替换PDF文件" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>SelectReplacementFiles</Button.Click>
+            </Button>
+            <Button Background="#E6E6E6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Delete.png" Width="16" Height="16"/>
+                    <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>ClearReplacementFiles</Button.Click>
+            </Button>
+            <!-- <Button Content="选择替换PDF文件" Click="SelectReplacementFiles"/> -->
+            <!-- <Button Content="清除替换PDF文件" Click="ClearReplacementFiles"/> -->
         </StackPanel>
 
         <ListBox Grid.Row="4" 
@@ -81,11 +107,19 @@
                    Text="{Binding StatusMessage}"
                    Margin="0,10"
                    Foreground="Green"/>
-
         <Button Grid.Row="6" 
+                Click="ReplacePages"
+                IsEnabled="{Binding SourceFiles.Count}"
+                HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Image Source="/Resources/start.ico" Width="16" Height="16"/>
+                <TextBlock Text="开始替换" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <!-- <Button Grid.Row="6" 
                 Content="开始替换" 
                 Click="ReplacePages"
                 IsEnabled="{Binding SourceFiles.Count}"
-                HorizontalAlignment="Right"/>
+                HorizontalAlignment="Right"/> -->
     </Grid>
 </UserControl>
