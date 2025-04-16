@@ -10,8 +10,20 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-            <Button Content="选择PDF文件" Click="SelectFiles"/>
-            <Button Content="清除所选PDF文件" Click="ClearAllFiles"/>
+            <Button Background="#2B579A" Foreground="White">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Upload.png" Width="16" Height="16"/>
+                    <TextBlock Text="选择PDF文件" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>SelectFiles</Button.Click>
+            </Button>
+            <Button Background="#E6E6E6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/Delete.png" Width="16" Height="16"/>
+                    <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Click>ClearAllFiles</Button.Click>
+            </Button>
         </StackPanel>
 
         <ListBox Grid.Row="1" 
