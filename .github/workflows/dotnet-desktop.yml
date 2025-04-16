@@ -48,10 +48,10 @@ jobs:  # 定义工作流中的作业
       run: dotnet restore
 
     - name: Build (Framework-dependent)
-      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore
+      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -p:PublishSingleFile=true
 
     - name: Build (Self-contained)
-      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true
+      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true
 
     - name: Upload Framework-dependent artifacts
       uses: actions/upload-artifact@v4
@@ -59,6 +59,9 @@ jobs:  # 定义工作流中的作业
         name: OfficeAssistant-Windows-Framework-v${{ steps.version.outputs.version }}
         path: |
           OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/publish/**/*
+        exclude: |
+          **/*.pdb
+          **/*.xml
 
     - name: Upload Self-contained artifacts
       uses: actions/upload-artifact@v4
@@ -69,20 +72,6 @@ jobs:  # 定义工作流中的作业
         exclude: |
           **/*.pdb
           **/*.xml
-
-    # 删除 Framework-dependent 相关的步骤和上传
-      uses: actions/upload-artifact@v4
-      with:
-        name: OfficeAssistant-Windows-Framework-dependent  # 构建产物名称
-        path: |  # 构建产物路径
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/**/*
-
-    - name: Upload Self-contained artifacts  # 上传自包含的构建产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: OfficeAssistant-Windows-Self-contained  # 构建产物名称
-        path: |  # 构建产物路径
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/win-x64/**/*
 
   build-macos:  # macOS 构建作业
     strategy:
@@ -118,13 +107,28 @@ jobs:  # 定义工作流中的作业
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Build
-      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r osx-x64 --self-contained true
-      # -r osx-x64: 指定目标平台为 macOS x64
-      # --self-contained true: 包含所有运行时依赖
+      run: |
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj \
+        --configuration ${{ matrix.configuration }} \
+        --no-restore \
+        -r osx-x64 \
+        --self-contained true \
+        -p:PublishSingleFile=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:IncludeNativeLibrariesForSelfExtract=true \
+        -p:CreateMacBundle=true \
+        -p:CFBundleName="OfficeAssistant" \
+        -p:CFBundleDisplayName="OfficeAssistant" \
+        -p:CFBundleIdentifier="com.yourcompany.officeassistant" \
+        -p:CFBundleVersion="${{ steps.version.outputs.version }}" \
+        -p:CFBundleShortVersionString="${{ steps.version.outputs.version }}" \
+        -p:CFBundlePackageType="APPL" \
+        -p:CFBundleSignature="????" \
+        -p:NSHighResolutionCapable=true
 
-    - name: Upload build artifacts  # 上传构建产物
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-macOS-v${{ steps.version.outputs.version }}
-        path: |  # 构建产物路径
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/publish/**/*
+        path: |
+          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/publish/*.app
