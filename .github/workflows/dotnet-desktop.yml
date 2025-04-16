@@ -48,30 +48,24 @@ jobs:  # 定义工作流中的作业
       run: dotnet restore
 
     - name: Build (Framework-dependent)
-      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -p:PublishSingleFile=true
+      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
     - name: Build (Self-contained)
-      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true
+      run: dotnet publish OfficeAssistant/OfficeAssistant.csproj --configuration ${{ matrix.configuration }} --no-restore -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
     - name: Upload Framework-dependent artifacts
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-Framework-v${{ steps.version.outputs.version }}
-        path: |
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/publish/**/*
-        exclude: |
-          **/*.pdb
-          **/*.xml
+        path: OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/publish/
+        if-no-files-found: error
 
     - name: Upload Self-contained artifacts
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-Self-contained-v${{ steps.version.outputs.version }}
-        path: |
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/win-x64/publish/**/*
-        exclude: |
-          **/*.pdb
-          **/*.xml
+        path: OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/win-x64/publish/
+        if-no-files-found: error
 
   build-macos:  # macOS 构建作业
     strategy:
@@ -124,11 +118,13 @@ jobs:  # 定义工作流中的作业
         -p:CFBundleShortVersionString="${{ steps.version.outputs.version }}" \
         -p:CFBundlePackageType="APPL" \
         -p:CFBundleSignature="????" \
-        -p:NSHighResolutionCapable=true
+        -p:NSHighResolutionCapable=true \
+        -p:DebugType=None \
+        -p:DebugSymbols=false
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-macOS-v${{ steps.version.outputs.version }}
-        path: |
-          OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/publish/*.app
+        path: OfficeAssistant/bin/${{ matrix.configuration }}/net8.0/osx-x64/publish/
+        if-no-files-found: error
