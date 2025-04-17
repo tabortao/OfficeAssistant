@@ -18,6 +18,11 @@ env:
   OutputPath64: "${{ github.workspace }}/OfficeAssistant/bin/Release/linux-x64"
   OutputPathArm64: "${{ github.workspace }}/OfficeAssistant/bin/Release/linux-arm64"
 
+# At the workflow level (near the top of the file)
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -98,8 +103,8 @@ jobs:
     - name: Create Release
       if: github.event.inputs.release_tag != ''
       uses: softprops/action-gh-release@v1
-      permissions:
-        contents: write
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
         files: |
