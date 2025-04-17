@@ -11,7 +11,7 @@
 ### V1.0.9 (2025-04-17)
 #### 改进
 - 优化UI显示
-- 增加Github Action自动打包发布
+- 增加Github Action自动发布到Github Releases
 ### V1.0.8 (2025-04-16)
 #### 改进
 - 修改左侧导航栏UI

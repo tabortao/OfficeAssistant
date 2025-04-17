@@ -1,0 +1,74 @@
+# 构建所有平台版本
+name: Build All Platforms
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: '发布版本标签 (例如: v1.0.0)'
+        required: false
+        type: string
+  # push:
+  #   branches:
+  #     - main
+
+permissions:
+  contents: write
+
+jobs:
+  trigger-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Windows Desktop Build
+        if: github.event.inputs.release_tag != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'build-windows-desktop.yml',
+              ref: 'main',
+              inputs: {
+                release_tag: '${{ github.event.inputs.release_tag }}'
+              }
+            })
+
+      - name: Trigger macOS Build
+        if: github.event.inputs.release_tag != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'build-osx.yml',
+              ref: 'main',
+              inputs: {
+                release_tag: '${{ github.event.inputs.release_tag }}'
+              }
+            })
+
+      - name: Trigger Linux Build
+        if: github.event.inputs.release_tag != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'build-linux.yml',
+              ref: 'main',
+              inputs: {
+                release_tag: '${{ github.event.inputs.release_tag }}'
+              }
+            })
+
+      - name: Wait for builds
+        if: github.event.inputs.release_tag != ''
+        run: |
+          echo "已触发所有平台的构建工作流"
+          echo "请在 Actions 页面查看构建进度"

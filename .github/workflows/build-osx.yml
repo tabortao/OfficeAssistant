@@ -98,10 +98,14 @@ jobs:
     - name: Create Release
       if: github.event.inputs.release_tag != ''
       uses: softprops/action-gh-release@v1
+      permissions:
+        contents: write
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
         files: |
-          OfficeAssistant-macos*.dmg
-          OfficeAssistant-macos*.zip
+          OfficeAssistant-macos-x64-v${{ steps.version.outputs.version }}.dmg
+          OfficeAssistant-macos-arm64-v${{ steps.version.outputs.version }}.dmg
+          OfficeAssistant-macos-x64-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-macos-arm64-v${{ steps.version.outputs.version }}.zip
         prerelease: true
         generate_release_notes: true
