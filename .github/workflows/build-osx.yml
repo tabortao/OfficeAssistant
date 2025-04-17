@@ -79,7 +79,7 @@ jobs:
 
     # 打包 DMG
     - name: Package DMG
-      if: github.event.inputs.release_tag != ''
+      # if: github.event.inputs.release_tag != ''
       run: |
         brew install create-dmg
         brew install imagemagick
