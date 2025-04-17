@@ -9,9 +9,9 @@
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishReadyToRun>false</PublishReadyToRun>
-    <Version>1.0.8.0</Version>
-    <AssemblyVersion>1.0.8.0</AssemblyVersion>
-    <FileVersion>1.0.8.0</FileVersion>
+    <Version>1.0.9.0</Version>
+    <AssemblyVersion>1.0.9.0</AssemblyVersion>
+    <FileVersion>1.0.9.0</FileVersion>
     <ApplicationIcon>Resources\ai.ico</ApplicationIcon>
   </PropertyGroup>
 

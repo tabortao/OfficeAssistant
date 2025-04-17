@@ -124,9 +124,9 @@ jobs:
       if: github.event.inputs.release_tag != ''
       shell: pwsh
       run: |
-        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip"
-        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip"
-        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip"
+        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip" -Force
+        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip" -Force
+        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip" -Force
 
     # 创建 GitHub Release
     - name: Create Release
