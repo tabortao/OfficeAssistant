@@ -9,20 +9,14 @@ ingredients:
 
 script:
   - mkdir -p usr/bin usr/lib
-  - cp -rf $OutputPath/* usr/lib/OfficeAssistant
+  - cp -rf "${OUTPUT_DIR}"/* usr/lib/OfficeAssistant
   - chmod a+x usr/lib/OfficeAssistant/OfficeAssistant
-  - ln -sf usr/lib/OfficeAssistant/OfficeAssistant usr/bin/OfficeAssistant
-  - find usr -type f -exec sh -c 'file "{}" | grep -qi "executable" && chmod +x "{}"' \;
-  
-  # 复制和安装图标
-  - install -Dm644 usr/lib/OfficeAssistant/Resources/icon.png OfficeAssistant.png
-  - install -Dm644 usr/lib/OfficeAssistant/Resources/icon.png usr/share/pixmaps/OfficeAssistant.png
-  
-  # 创建桌面入口文件
+  - ln -sf ../lib/OfficeAssistant/OfficeAssistant usr/bin/OfficeAssistant
+  - find usr/lib -type f -exec sh -c 'file "{}" | grep -qi "executable" && chmod +x "{}"' \;
   - cat > OfficeAssistant.desktop <<EOF
   - [Desktop Entry]
-  - Name=Office Assistant
-  - Comment=AI-powered office productivity tool
+  - Name=OfficeAssistant
+  - Comment=Office Assistant Desktop Application
   - Exec=OfficeAssistant
   - Icon=OfficeAssistant
   - Terminal=false
@@ -30,12 +24,10 @@ script:
   - Categories=Office;Utility;
   - EOF
   - install -Dm644 OfficeAssistant.desktop usr/share/applications/OfficeAssistant.desktop
-  
-  # 创建 AppRun 启动脚本
   - cat > AppRun <<\EOF
   - #!/bin/sh
   - HERE="$(dirname "$(readlink -f "${0}")")"
-  - cd ${HERE}/usr/lib/OfficeAssistant
-  - exec ${HERE}/usr/lib/OfficeAssistant/OfficeAssistant $@
+  - export DOTNET_ROOT="${HERE}/usr/lib/OfficeAssistant"
+  - exec "${HERE}/usr/lib/OfficeAssistant/OfficeAssistant" "$@"
   - EOF
   - chmod a+x AppRun
