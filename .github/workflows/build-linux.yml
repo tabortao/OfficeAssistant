@@ -87,16 +87,16 @@ jobs:
         # 设置脚本权限
         chmod 755 scripts/package-*.sh
 
+        # 设置环境变量
+        export VERSION="${{ steps.version.outputs.version }}"
+        export OUTPUT_DIR="${{ env.OutputPath64 }}"
+        export GITHUB_WORKSPACE="${{ github.workspace }}"
+
         # 创建 DEB 包
         ./scripts/package-debian.sh "${{ env.OutputArch }}" "${{ env.OutputPath64 }}" "${{ steps.version.outputs.version }}"
         ./scripts/package-debian.sh "${{ env.OutputArchArm }}" "${{ env.OutputPathArm64 }}" "${{ steps.version.outputs.version }}"
 
-        # 创建 AppImage (仅 x64 版本)
-        export VERSION="${{ steps.version.outputs.version }}"
-        export OUTPUT_DIR="${{ env.OutputPath64 }}"
-        mkdir -p AppDir/usr/{bin,lib}
-        cp -r "${{ env.OutputPath64 }}"/* AppDir/usr/lib/
-        ln -s ../lib/OfficeAssistant AppDir/usr/bin/OfficeAssistant
+        # 创建 AppImage
         ./scripts/package-appimage.sh
 
         # 创建 ZIP
