@@ -75,6 +75,10 @@ jobs:
     - name: Prepare Release Packages
       if: github.event.inputs.release_tag != ''
       run: |
+        # 安装必要的依赖
+        sudo apt-get update
+        sudo apt-get install -y desktop-file-utils libfuse2 dpkg-dev
+
         # 设置脚本权限
         chmod 755 scripts/package-*.sh
 
@@ -82,7 +86,9 @@ jobs:
         ./scripts/package-debian.sh "${{ env.OutputArch }}" "${{ env.OutputPath64 }}" "${{ steps.version.outputs.version }}"
         ./scripts/package-debian.sh "${{ env.OutputArchArm }}" "${{ env.OutputPathArm64 }}" "${{ steps.version.outputs.version }}"
 
-        # 创建 AppImage
+        # 创建 AppImage (仅 x64 版本)
+        export VERSION="${{ steps.version.outputs.version }}"
+        export OUTPUT_DIR="${{ env.OutputPath64 }}"
         ./scripts/package-appimage.sh
 
         # 创建 ZIP
@@ -92,11 +98,15 @@ jobs:
     - name: Create Release
       if: github.event.inputs.release_tag != ''
       uses: softprops/action-gh-release@v1
+      permissions:
+        contents: write
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
         files: |
-          OfficeAssistant-linux*.deb
-          OfficeAssistant-linux*.AppImage
-          OfficeAssistant-linux*.zip
+          OfficeAssistant-linux-x64-v${{ steps.version.outputs.version }}.deb
+          OfficeAssistant-linux-arm64-v${{ steps.version.outputs.version }}.deb
+          OfficeAssistant-linux-x64-v${{ steps.version.outputs.version }}.AppImage
+          OfficeAssistant-linux-x64-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-linux-arm64-v${{ steps.version.outputs.version }}.zip
         prerelease: true
         generate_release_notes: true

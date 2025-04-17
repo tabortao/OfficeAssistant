@@ -1,18 +1,18 @@
 #!/bin/bash
 
-sudo apt update -y
-sudo apt install -y libfuse2
+# 安装依赖
+sudo apt-get update -y
+sudo apt-get install -y libfuse2 desktop-file-utils
+
+# 下载 pkg2appimage
 wget -O pkg2appimage https://github.com/AppImageCommunity/pkg2appimage/releases/download/continuous/pkg2appimage-1eceb30-x86_64.AppImage
 chmod a+x pkg2appimage
 
-# 打包 x64 版本
-export AppImageOutputArch=$OutputArch
-export OutputPath=$OutputPath64
-./pkg2appimage ./pkg2appimage.yml
-mv out/*.AppImage OfficeAssistant-${AppImageOutputArch}.AppImage
+# 设置环境变量
+export VERSION="${VERSION}"
+export APP_NAME="OfficeAssistant"
+export OUTPUT_DIR="${OUTPUT_DIR}"
 
-# 打包 ARM64 版本
-export AppImageOutputArch=$OutputArchArm
-export OutputPath=$OutputPathArm64
-./pkg2appimage ./pkg2appimage.yml
-mv out/*.AppImage OfficeAssistant-${AppImageOutputArch}.AppImage
+# 创建 AppImage
+./pkg2appimage ./scripts/pkg2appimage.yml
+mv out/*.AppImage "${APP_NAME}-linux-x64-v${VERSION}.AppImage"
