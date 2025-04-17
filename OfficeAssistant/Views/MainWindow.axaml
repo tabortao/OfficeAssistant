@@ -10,7 +10,7 @@
 
         <!-- 左侧导航栏 -->
         <ListBox Grid.Column="0" 
-                 Background="#383838"
+                 Background="#3C3C3C"
                  SelectedIndex="0"
                  SelectionChanged="OnNavigationChanged">
             <ListBox.Styles>

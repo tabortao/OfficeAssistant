@@ -32,7 +32,7 @@
 
 ## 使用的技术
 
-- Avalonia UI 11.2.1
+- Avalonia UI 11.2.7
 - PdfSharpCore
 
 ## 快速开始

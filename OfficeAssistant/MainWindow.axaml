@@ -12,7 +12,7 @@
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" 
-                Background="#383838"
+                Background="#3C3C3C"
                 BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"
                 BorderThickness="0,0,1,0">
             <ListBox x:Name="NavigationList" 
