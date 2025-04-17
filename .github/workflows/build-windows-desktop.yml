@@ -100,7 +100,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-x64-v${{ steps.version.outputs.version }}
-        path: OfficeAssistant-windows-x64-v*.zip
+        path: ${{ env.OutputPath64 }}
         if-no-files-found: error
 
     # 上传 x64 框架依赖版本构建产物
@@ -108,7 +108,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-x64-Framework-v${{ steps.version.outputs.version }}
-        path: OfficeAssistant-windows-x64-framework-*.zip
+        path: ${{ env.OutputPath64 }}-framework
         if-no-files-found: error
 
     # 上传 ARM64 构建产物
@@ -116,8 +116,17 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: OfficeAssistant-Windows-ARM64-v${{ steps.version.outputs.version }}
-        path: OfficeAssistant-windows-arm64-*.zip
+        path: ${{ env.OutputPathArm64 }}
         if-no-files-found: error
+
+    # 创建 ZIP 压缩包（仅用于 Release）
+    - name: Create ZIP archives for Release
+      if: github.event.inputs.release_tag != ''
+      shell: pwsh
+      run: |
+        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip"
+        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip"
+        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip"
 
     # 创建 GitHub Release
     - name: Create Release
