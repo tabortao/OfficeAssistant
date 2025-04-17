@@ -94,6 +94,9 @@ jobs:
         # 创建 AppImage (仅 x64 版本)
         export VERSION="${{ steps.version.outputs.version }}"
         export OUTPUT_DIR="${{ env.OutputPath64 }}"
+        mkdir -p AppDir/usr/{bin,lib}
+        cp -r "${{ env.OutputPath64 }}"/* AppDir/usr/lib/
+        ln -s ../lib/OfficeAssistant AppDir/usr/bin/OfficeAssistant
         ./scripts/package-appimage.sh
 
         # 创建 ZIP
