@@ -1,0 +1,111 @@
+# 构建 macOS 桌面版 (Avalonia UI)
+name: Build macOS Desktop (Avalonia UI)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+
+env:
+  OutputArch: "macos-x64"
+  OutputArchArm: "macos-arm64"
+  OutputPath64: "${{ github.workspace }}/OfficeAssistant/bin/Release/macos-x64"
+  OutputPathArm64: "${{ github.workspace }}/OfficeAssistant/bin/Release/macos-arm64"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        submodules: 'recursive'
+        fetch-depth: '0'
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.3.1
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Get Version
+      id: version
+      shell: bash
+      run: |
+        version=$(grep -m1 '<Version>' OfficeAssistant/OfficeAssistant.csproj | awk -F'[<>]' '{print $3}')
+        echo "version=$version" >> $GITHUB_OUTPUT
+
+    - name: Build
+      run: |
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj \
+        -c Release \
+        -r osx-x64 \
+        --self-contained true \
+        -p:PublishSingleFile=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:PublishTrimmed=true \
+        -p:DebugType=None \
+        -p:DebugSymbols=false \
+        -o "${{ env.OutputPath64 }}"
+
+        dotnet publish OfficeAssistant/OfficeAssistant.csproj \
+        -c Release \
+        -r osx-arm64 \
+        --self-contained true \
+        -p:PublishSingleFile=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:PublishTrimmed=true \
+        -p:DebugType=None \
+        -p:DebugSymbols=false \
+        -o "${{ env.OutputPathArm64 }}"
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: OfficeAssistant-macOS-v${{ steps.version.outputs.version }}
+        path: |
+          ${{ github.workspace }}/OfficeAssistant/bin/Release/macos*
+
+    # 打包 DMG
+    - name: Package DMG
+      if: github.event.inputs.release_tag != ''
+      run: |
+        brew install create-dmg
+        chmod 755 scripts/package-osx.sh
+        ./scripts/package-osx.sh ${{ env.OutputArch }} ${{ env.OutputPath64 }} ${{ github.event.inputs.release_tag }}
+        ./scripts/package-osx.sh ${{ env.OutputArchArm }} ${{ env.OutputPathArm64 }} ${{ github.event.inputs.release_tag }}
+
+    - name: Upload DMG to release
+      uses: svenstaro/upload-release-action@v2
+      if: github.event.inputs.release_tag != ''
+      with:
+        file: ${{ github.workspace }}/OfficeAssistant*.dmg
+        tag: ${{ github.event.inputs.release_tag }}
+        file_glob: true
+        prerelease: true
+
+    # 打包 ZIP
+    - name: Package ZIP archive
+      if: github.event.inputs.release_tag != ''
+      run: |
+        chmod 755 scripts/package-release-zip.sh
+        ./scripts/package-release-zip.sh ${{ env.OutputArch }} ${{ env.OutputPath64 }}
+        ./scripts/package-release-zip.sh ${{ env.OutputArchArm }} ${{ env.OutputPathArm64 }}
+
+    - name: Upload ZIP to release
+      uses: svenstaro/upload-release-action@v2
+      if: github.event.inputs.release_tag != ''
+      with:
+        file: ${{ github.workspace }}/OfficeAssistant*.zip
+        tag: ${{ github.event.inputs.release_tag }}
+        file_glob: true
+        prerelease: true
