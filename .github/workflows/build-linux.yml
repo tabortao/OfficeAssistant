@@ -7,9 +7,10 @@ on:
       release_tag:
         required: false
         type: string
-  push:
-    branches:
-      - main
+  # 取消推送到main分支时触发工作流
+  # push:
+  #   branches:
+  #     - main
 
 env:
   OutputArch: "linux-x64"

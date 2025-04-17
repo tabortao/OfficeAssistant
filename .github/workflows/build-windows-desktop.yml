@@ -7,9 +7,9 @@ on:
       release_tag:
         required: false
         type: string
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 # 环境变量
 env:
   OutputPath64: "${{ github.workspace }}/OfficeAssistant/bin/Release/windows-x64"
@@ -88,13 +88,10 @@ jobs:
     - name: Create ZIP archives
       shell: pwsh
       run: |
-        # 确保脚本有执行权限
-        chmod 755 scripts/package-release-zip.sh
-        
-        # 使用统一的打包脚本创建 ZIP
-        ./scripts/package-release-zip.sh "windows-x64" "${{ env.OutputPath64 }}" "${{ steps.version.outputs.version }}"
-        ./scripts/package-release-zip.sh "windows-x64-framework" "${{ env.OutputPath64 }}-framework" "${{ steps.version.outputs.version }}"
-        ./scripts/package-release-zip.sh "windows-arm64" "${{ env.OutputPathArm64 }}" "${{ steps.version.outputs.version }}"
+        # 使用 PowerShell 命令创建 ZIP（Windows 环境）
+        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip" -Force
+        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip" -Force
+        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip" -Force
 
     # 上传构建产物
     - name: Upload Artifacts
@@ -105,15 +102,20 @@ jobs:
           ${{ env.OutputPath64 }}
           ${{ env.OutputPath64 }}-framework
           ${{ env.OutputPathArm64 }}
+          OfficeAssistant-windows-*.zip
         if-no-files-found: error
 
     # 创建 GitHub Release
     - name: Create Release
       if: github.event.inputs.release_tag != ''
       uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
-        files: OfficeAssistant-windows-*.zip
+        files: |
+          OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip
+          OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip
         prerelease: true
         generate_release_notes: true
-        token: ${{ secrets.GITHUB_TOKEN }}
