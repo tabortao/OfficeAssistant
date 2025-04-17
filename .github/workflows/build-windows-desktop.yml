@@ -54,13 +54,8 @@ jobs:
         -p:EnableCompressionInSingleFile=true `
         -p:DebugType=None `
         -p:DebugSymbols=false `
+        -p:EnableWindowsTargeting=true `
         -o "${{ env.OutputPath64 }}"
-#         --self-contained true `               # 包含运行时
-#         -p:PublishSingleFile=true `           # 发布为单文件
-#         -p:EnableCompressionInSingleFile=true ` # 启用单文件压缩
-#         -p:DebugType=None `                   # 不包含调试信息
-#         -p:DebugSymbols=false `              # 不包含调试符号
-#         -o "${{ env.OutputPath64 }}"         # 输出目录
 
     # 构建 ARM64 版本
     - name: Build ARM64
@@ -73,6 +68,7 @@ jobs:
         -p:EnableCompressionInSingleFile=true `
         -p:DebugType=None `
         -p:DebugSymbols=false `
+        -p:EnableWindowsTargeting=true `
         -o "${{ env.OutputPathArm64 }}"
 
     # 构建 x64 框架依赖版本（不含运行时）
@@ -85,48 +81,31 @@ jobs:
         -p:PublishSingleFile=true `
         -p:DebugType=None `
         -p:DebugSymbols=false `
+        -p:EnableWindowsTargeting=true `
         -o "${{ env.OutputPath64 }}-framework"
 
     # 创建 ZIP 压缩包
     - name: Create ZIP archives
       shell: pwsh
       run: |
-        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip"
-        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip"
-        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip"
+        # 确保脚本有执行权限
+        chmod 755 scripts/package-release-zip.sh
+        
+        # 使用统一的打包脚本创建 ZIP
+        ./scripts/package-release-zip.sh "windows-x64" "${{ env.OutputPath64 }}" "${{ steps.version.outputs.version }}"
+        ./scripts/package-release-zip.sh "windows-x64-framework" "${{ env.OutputPath64 }}-framework" "${{ steps.version.outputs.version }}"
+        ./scripts/package-release-zip.sh "windows-arm64" "${{ env.OutputPathArm64 }}" "${{ steps.version.outputs.version }}"
 
-    # 上传 x64 自包含版本构建产物
-    - name: Upload x64 self-contained artifacts
+    # 上传构建产物
+    - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: OfficeAssistant-Windows-x64-v${{ steps.version.outputs.version }}
-        path: ${{ env.OutputPath64 }}
+        name: OfficeAssistant-Windows-v${{ steps.version.outputs.version }}
+        path: |
+          ${{ env.OutputPath64 }}
+          ${{ env.OutputPath64 }}-framework
+          ${{ env.OutputPathArm64 }}
         if-no-files-found: error
-
-    # 上传 x64 框架依赖版本构建产物
-    - name: Upload x64 framework-dependent artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: OfficeAssistant-Windows-x64-Framework-v${{ steps.version.outputs.version }}
-        path: ${{ env.OutputPath64 }}-framework
-        if-no-files-found: error
-
-    # 上传 ARM64 构建产物
-    - name: Upload ARM64 artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: OfficeAssistant-Windows-ARM64-v${{ steps.version.outputs.version }}
-        path: ${{ env.OutputPathArm64 }}
-        if-no-files-found: error
-
-    # 创建 ZIP 压缩包（仅用于 Release）
-    - name: Create ZIP archives for Release
-      if: github.event.inputs.release_tag != ''
-      shell: pwsh
-      run: |
-        Compress-Archive -Path "${{ env.OutputPath64 }}/*" -DestinationPath "OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip" -Force
-        Compress-Archive -Path "${{ env.OutputPath64 }}-framework/*" -DestinationPath "OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip" -Force
-        Compress-Archive -Path "${{ env.OutputPathArm64 }}/*" -DestinationPath "OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip" -Force
 
     # 创建 GitHub Release
     - name: Create Release
@@ -134,9 +113,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.event.inputs.release_tag }}
-        files: |
-          OfficeAssistant-windows-x64-v${{ steps.version.outputs.version }}.zip
-          OfficeAssistant-windows-x64-framework-v${{ steps.version.outputs.version }}.zip
-          OfficeAssistant-windows-arm64-v${{ steps.version.outputs.version }}.zip
+        files: OfficeAssistant-windows-*.zip
         prerelease: true
         generate_release_notes: true
+        token: ${{ secrets.GITHUB_TOKEN }}
