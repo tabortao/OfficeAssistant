@@ -50,22 +50,12 @@ jobs:
         -c Release \
         -r osx-x64 \
         --self-contained true \
-        -p:PublishSingleFile=true \
-        -p:EnableCompressionInSingleFile=true \
-        -p:PublishTrimmed=true \
-        -p:DebugType=None \
-        -p:DebugSymbols=false \
         -o "${{ env.OutputPath64 }}"
 
         dotnet publish OfficeAssistant/OfficeAssistant.csproj \
         -c Release \
         -r osx-arm64 \
         --self-contained true \
-        -p:PublishSingleFile=true \
-        -p:EnableCompressionInSingleFile=true \
-        -p:PublishTrimmed=true \
-        -p:DebugType=None \
-        -p:DebugSymbols=false \
         -o "${{ env.OutputPathArm64 }}"
 
     - name: Upload build artifacts
@@ -81,8 +71,8 @@ jobs:
       run: |
         brew install create-dmg
         chmod 755 scripts/package-osx.sh
-        ./scripts/package-osx.sh ${{ env.OutputArch }} ${{ env.OutputPath64 }} ${{ github.event.inputs.release_tag }}
-        ./scripts/package-osx.sh ${{ env.OutputArchArm }} ${{ env.OutputPathArm64 }} ${{ github.event.inputs.release_tag }}
+        ./scripts/package-osx.sh ${{ env.OutputArch }} ${{ env.OutputPath64 }} ${{ steps.version.outputs.version }}
+        ./scripts/package-osx.sh ${{ env.OutputArchArm }} ${{ env.OutputPathArm64 }} ${{ steps.version.outputs.version }}
 
     - name: Upload DMG to release
       uses: svenstaro/upload-release-action@v2
