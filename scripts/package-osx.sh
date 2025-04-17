@@ -21,7 +21,7 @@ mkdir -p "${RESOURCES_DIR}"
 cp -r "${SOURCE_PATH}"/* "${MACOS_DIR}/"
 
 # 复制图标
-cp "Assets/icon.icns" "${RESOURCES_DIR}/"
+cp "OfficeAssistant/Resources/icon.icns" "${RESOURCES_DIR}/" || true
 
 # 创建 Info.plist
 cat > "${CONTENTS_DIR}/Info.plist" << EOF
@@ -57,7 +57,7 @@ chmod +x "${MACOS_DIR}/OfficeAssistant"
 # 创建 DMG
 create-dmg \
   --volname "${APP_NAME}" \
-  --volicon "Assets/icon.icns" \
+  --volicon "OfficeAssistant/Resources/icon.icns" \
   --window-pos 200 120 \
   --window-size 800 400 \
   --icon-size 100 \

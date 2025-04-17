@@ -50,12 +50,24 @@ jobs:
         -c Release \
         -r osx-x64 \
         --self-contained true \
+        -p:PublishSingleFile=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:DebugType=None \
+        -p:DebugSymbols=false \
+        -p:UseAppHost=true \
+        -p:CreatePackage=true \
         -o "${{ env.OutputPath64 }}"
 
         dotnet publish OfficeAssistant/OfficeAssistant.csproj \
         -c Release \
         -r osx-arm64 \
         --self-contained true \
+        -p:PublishSingleFile=true \
+        -p:EnableCompressionInSingleFile=true \
+        -p:DebugType=None \
+        -p:DebugSymbols=false \
+        -p:UseAppHost=true \
+        -p:CreatePackage=true \
         -o "${{ env.OutputPathArm64 }}"
 
     - name: Upload build artifacts
@@ -70,6 +82,11 @@ jobs:
       if: github.event.inputs.release_tag != ''
       run: |
         brew install create-dmg
+        brew install imagemagick
+        # 如果没有图标文件，创建一个默认图标
+        if [ ! -f "OfficeAssistant/Resources/icon.icns" ]; then
+          convert OfficeAssistant/Resources/icon.png OfficeAssistant/Resources/icon.icns || true
+        fi
         chmod 755 scripts/package-osx.sh
         ./scripts/package-osx.sh ${{ env.OutputArch }} ${{ env.OutputPath64 }} ${{ steps.version.outputs.version }}
         ./scripts/package-osx.sh ${{ env.OutputArchArm }} ${{ env.OutputPathArm64 }} ${{ steps.version.outputs.version }}
