@@ -1,7 +1,8 @@
 # Office Assistant
 
 一个基于 Avalonia UI 开发的跨平台办公助手工具。
-![](OfficeAssistant\docs\UIImage\20250416145712-UI效果.jpg)
+
+![Image](https://github.com/user-attachments/assets/ea265412-f210-4573-a6f3-3bbc72f26248)
 
 ## 功能特性
 
