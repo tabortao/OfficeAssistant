@@ -35,7 +35,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
-OutputBaseFilename={#MyAppName} V{#MyAppVersion}
+OutputBaseFilename={#MyAppName}-windows-x64-V{#MyAppVersion}
 ; 输出目录
 OutputDir=F:\Code\OfficeAssistant\OfficeAssistant\bin\Release\Release
 SetupIconFile=F:\Code\OfficeAssistant\OfficeAssistant\Resources\ai.ico

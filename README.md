@@ -1,6 +1,14 @@
 # Office Assistant
 
-一个基于 Avalonia UI 开发的跨平台办公助手工具。
+一个基于 Avalonia UI 开发的跨平台办公助手工具，专注于 PDF 文档的批量处理。提供直观的用户界面和高效的文档处理功能，包括 PDF 文件的批量合并、智能拆分和页面替换等核心功能。采用 MVVM 架构设计，确保代码的可维护性和扩展性。
+
+主要特点：
+- 🚀 高效批处理：支持多个 PDF 文件的批量操作
+- 🎯 功能专注：专注于 PDF 文档处理的核心需求
+- 💻 跨平台支持：基于 Avalonia UI 开发，支持 Windows、Linux 和 macOS
+- 🎨 现代界面：采用 Semi.Avalonia 主题，提供现代化的用户体验
+- 🛠 可扩展性：基于 MVVM 架构，易于扩展新功能
+- 📦 轻量级：单文件发布，无需安装，即点即用
 
 ![Image](https://github.com/user-attachments/assets/ea265412-f210-4573-a6f3-3bbc72f26248)
 
@@ -39,7 +47,7 @@
 
 1. 克隆仓库
 ```bash
-git clone <repository-url>
+git clone https://github.com/yaoleistable/OfficeAssistant.git
 ```
 
 2. 进入项目目录
@@ -85,6 +93,14 @@ dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile
 4. 可选：点击"选择输出目录"设置保存位置
    - 若未设置，将在原文件所在目录创建"拆分文件"文件夹
 5. 点击"开始拆分"按钮完成拆分
+
+### PDF 批量替换
+1. 在左侧导航栏选择"PDF替换"
+2. 点击"选择源文件"按钮选择需要替换的PDF文件
+3. 点击"选择替换文件"按钮选择用于替换的PDF文件
+4. 确保源文件和替换文件数量一致
+5. 可选：输入要替换的页码（如：1,3,5）
+6. 点击"开始替换"按钮完成替换
 
 ## 运行环境要求
 

@@ -34,6 +34,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    # 安装必要的工作负载
+    - name: Install .NET workloads
+      run: |
+        dotnet workload install wasm-tools
+        dotnet workload install maui
+        dotnet workload restore
+
  # 从项目文件获取版本号
     - name: Get Version
       id: version
