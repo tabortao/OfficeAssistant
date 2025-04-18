@@ -1,5 +1,8 @@
+> 20250417 花费一天时间，研究明白了Github Action的工作原理，可以很方便的使用github action 构建多版本应用，下面是对Github Action的工作原理的详细解释，加深下自己的理解，方便后续更好的使用。
+
 ## Github Action说明
 Github Action 是一个自动化的工作流引擎，用于在 GitHub 仓库中执行各种任务。它可以与其他 GitHub 功能（如拉取请求、问题和讨论）集成，以实现持续集成、持续交付和持续部署等工作流。
+
 
 ### 1. 工作流文件
 
@@ -14,6 +17,9 @@ Github Action 是一个自动化的工作流引擎，用于在 GitHub 仓库中�
 - `pull_request`：当有新的拉取请求创建时触发工作流。
 - `schedule`：按照指定的时间表触发工作流。
 - `workflow_dispatch`：通过手动触发工作流。
+
+比如要发布应用release，在github action中，执行添加好的YAML文件，添加应用标签，就可以发布到对应的release中。
+也可以自动触发，在git pull的时候，自动触发。
 
 ### 常见问题
 
