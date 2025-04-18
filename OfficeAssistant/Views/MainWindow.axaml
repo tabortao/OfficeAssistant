@@ -1,37 +1,72 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:OfficeAssistant.Views"
         x:Class="OfficeAssistant.Views.MainWindow"
-        Title="Office Assistant">
+        Title="Office Assistant"
+        Icon="/Resources/ai.ico"
+        Width="800" Height="600">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- 左侧导航栏 -->
-        <ListBox Grid.Column="0" 
-                 Background="#3C3C3C"
-                 SelectedIndex="0"
-                 SelectionChanged="OnNavigationChanged">
-            <ListBox.Styles>
-                <Style Selector="ListBoxItem">
-                    <Setter Property="Padding" Value="20,10"/>
-                    <Setter Property="Foreground" Value="#CCCCCC"/>
-                </Style>
-                <Style Selector="ListBoxItem:selected">
-                    <Setter Property="Foreground" Value="#50A0C3"/>
-                </Style>
-                <Style Selector="ListBoxItem:pointerover">
-                    <Setter Property="Foreground" Value="#2D2D2D"/>
-                </Style>
-            </ListBox.Styles>
-            
-            <ListBoxItem Content="PDF合并"/>
-            <ListBoxItem Content="PDF拆分"/>
-        </ListBox>
+        <!-- Background="#3C3C3C" 深灰色-->
+        <Border Grid.Column="0" 
+                Background="#3C3C3C"
+                BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"
+                BorderThickness="0,0,1,0">
+            <ListBox x:Name="NavigationList" 
+                    SelectionChanged="OnNavigationSelectionChanged"
+                    Background="Transparent">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Padding" Value="10"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Style>
+                    <Style Selector="ListBoxItem:selected">
+                        <Setter Property="Background" Value="#50A0C3"/>
+                    </Style>
+                    <Style Selector="ListBoxItem:pointerover">
+                        <Setter Property="Background" Value="#4A4A4A"/>
+                    </Style>
+                </ListBox.Styles>
 
-        <!-- 右侧内容区域 -->
-        <ContentControl Grid.Column="1" 
-                        x:Name="ContentArea"/>
+                <ListBoxItem IsSelected="True">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfMerge24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF批量合并" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
+                
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfSplit24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF批量拆分" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
+                
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfReplace24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF批量替换" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </Border>
+
+        <Grid Grid.Column="1" x:Name="ContentArea">
+            <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
+            <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
+            <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
+        </Grid>
+         <TextBlock Grid.Column="0"
+               Text="{Binding Version}"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom"
+               Margin="0,0,0,10"/>
     </Grid>
 </Window>

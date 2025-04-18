@@ -1,7 +1,8 @@
 using Avalonia;
-using Avalonia.Controls;  // 添加这行
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using OfficeAssistant.Views;
 
 namespace OfficeAssistant
 {
@@ -18,7 +19,7 @@ namespace OfficeAssistant
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                MainWindow = desktop.MainWindow = new MainWindow();
+                MainWindow = desktop.MainWindow = new Views.MainWindow();
             }
 
             base.OnFrameworkInitializationCompleted();
