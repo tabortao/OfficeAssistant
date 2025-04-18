@@ -1,118 +1,120 @@
 # Office Assistant
 
-一个基于 Avalonia UI 开发的跨平台办公助手工具，专注于 PDF 文档的批量处理。提供直观的用户界面和高效的文档处理功能，包括 PDF 文件的批量合并、智能拆分和页面替换等核心功能。采用 MVVM 架构设计，确保代码的可维护性和扩展性。
+[中文介绍](docs\README-zh.md)
 
-主要特点：
-- 🚀 高效批处理：支持多个 PDF 文件的批量操作
-- 🎯 功能专注：专注于 PDF 文档处理的核心需求
-- 💻 跨平台支持：基于 Avalonia UI 开发，支持 Windows、Linux 和 macOS
-- 🎨 现代界面：采用 Semi.Avalonia 主题，提供现代化的用户体验
-- 🛠 可扩展性：基于 MVVM 架构，易于扩展新功能
-- 📦 轻量级：单文件发布，无需安装，即点即用
+Office Assistant is a cross-platform office tool developed with Avalonia UI, focusing on batch processing of PDF documents. It provides an intuitive user interface and efficient, stable document processing functions, including batch merging, intelligent splitting, and page replacement of PDF files. The tool is designed with MVVM architecture, ensuring good maintainability and extensibility of the code while providing a smooth user experience.
+
+Key Features:
+- 🚀 Efficient Batch Processing: Support batch operations for multiple PDF files
+- 🎯 Focused Functionality: Concentrate on core PDF document processing needs
+- 💻 Cross-platform Support: Developed with Avalonia UI, supporting Windows, Linux, and macOS
+- 🎨 Modern Interface: Using Semi.Avalonia theme for a modern user experience
+- 🛠 Extensibility: Based on MVVM architecture, easy to extend new features
+- 📦 Lightweight: Single-file deployment, no installation required, ready to use
 
 ![Image](https://github.com/user-attachments/assets/ea265412-f210-4573-a6f3-3bbc72f26248)
 
-## 功能特性
+## Features
 
-- PDF 文件批量合并
-  - 支持选择多个 PDF 文件
-  - 文件列表可视化管理
-  - 支持删除已选文件
-  - 合并完成后状态提示
+- PDF File Batch Merge
+  - Support selecting multiple PDF files
+  - Visual management of file list
+  - Support deleting selected files
+  - Status notification after merging
 
-- PDF 文件批量拆分
-  - 支持选择一个或多个 PDF 文件
-  - 支持每页拆分为单独 PDF
-  - 支持按页码范围拆分（如：1-3,5,7-9）
-  - 支持自定义输出目录
-  - 拆分完成后状态提示
+- PDF File Batch Split
+  - Support selecting one or multiple PDF files
+  - Support splitting each page into separate PDFs
+  - Support splitting by page range (e.g., 1-3,5,7-9)
+  - Support custom output directory
+  - Status notification after splitting
 
-- PDF批量替换
-  - 支持批量选择源文件和替换文件
-  - 源文件和替换文件数量必须一致
-  - 可指定要替换的页码
-  - 直接覆盖源文件进行替换
+- PDF Batch Replace
+  - Support batch selection of source and replacement files
+  - Source and replacement files must be equal in number
+  - Can specify pages to replace
+  - Direct replacement of source files
 
-## 开发环境要求
+## Development Requirements
 
 - .NET 8.0 SDK
-- Visual Studio 2022 或其他支持 .NET 的 IDE
+- Visual Studio 2022 or other .NET-supporting IDEs
 
-## 使用的技术
+## Technologies Used
 
 - Avalonia UI 11.2.7
 - PdfSharpCore
 
-## 快速开始
+## Quick Start
 
-1. 克隆仓库
+1. Clone repository
 ```bash
 git clone https://github.com/yaoleistable/OfficeAssistant.git
 ```
 
-2. 进入项目目录
+2. Enter project directory
 ```bash
 cd OfficeAssistant
 ```
 
-3. 构建项目
+3. Build project
 ```bash
-# dotnet clean # 清理解决方案
+# dotnet clean # Clean solution
 dotnet build
-# dotnet build -c Release # 构建项目
+# dotnet build -c Release # Build project
 ```
 
-4. 运行应用
+4. Run application
 ```bash
 dotnet run
 ```
 
-5. 发布应用
+5. Publish application
 ```bash
-# 发布 Windows 版本，不含.NET 运行时
+# Publish Windows version without .NET runtime
 dotnet publish -c Release -r win-x64 --no-self-contained
-# 将应用程序打包为单个可执行文件（.exe）
+# Package application as a single executable file (.exe)
 dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile=true
 ```
 
-## 使用说明
+## Usage Instructions
 
-### PDF 批量合并
-1. 启动应用程序
-2. 在左侧导航栏选择"PDF合并"
-3. 点击"选择PDF文件"按钮选择需要合并的PDF文件
-4. 在文件列表中查看和管理已选文件
-5. 点击"合并PDF"按钮选择保存位置并完成合并
+### PDF Batch Merge
+1. Launch the application
+2. Select "PDF Merge" in the left navigation bar
+3. Click "Select PDF Files" button to choose PDFs for merging
+4. View and manage selected files in the file list
+5. Click "Merge PDF" button to choose save location and complete merging
 
-### PDF 批量拆分
-1. 在左侧导航栏选择"PDF拆分"
-2. 点击"选择PDF文件"按钮选择需要拆分的PDF文件
-3. 选择拆分模式：
-   - 每页拆分为单独PDF：将每一页保存为独立的PDF文件
-   - 按页码范围拆分：输入页码范围（如：1-3,5,7-9）
-4. 可选：点击"选择输出目录"设置保存位置
-   - 若未设置，将在原文件所在目录创建"拆分文件"文件夹
-5. 点击"开始拆分"按钮完成拆分
+### PDF Batch Split
+1. Select "PDF Split" in the left navigation bar
+2. Click "Select PDF Files" button to choose PDFs for splitting
+3. Choose split mode:
+   - Split each page into separate PDF: Save each page as an independent PDF file
+   - Split by page range: Enter page range (e.g., 1-3,5,7-9)
+4. Optional: Click "Select Output Directory" to set save location
+   - If not set, a "Split Files" folder will be created in the original file directory
+5. Click "Start Split" button to complete splitting
 
-### PDF 批量替换
-1. 在左侧导航栏选择"PDF替换"
-2. 点击"选择源文件"按钮选择需要替换的PDF文件
-3. 点击"选择替换文件"按钮选择用于替换的PDF文件
-4. 确保源文件和替换文件数量一致
-5. 可选：输入要替换的页码（如：1,3,5）
-6. 点击"开始替换"按钮完成替换
+### PDF Batch Replace
+1. Select "PDF Replace" in the left navigation bar
+2. Click "Select Source Files" button to choose PDFs to be replaced
+3. Click "Select Replacement Files" button to choose PDFs for replacement
+4. Ensure source and replacement files are equal in number
+5. Optional: Enter pages to replace (e.g., 1,3,5)
+6. Click "Start Replace" button to complete replacement
 
-## 运行环境要求
+## Runtime Requirements
 
 - Windows 10/11
-- .NET 8.0 运行时
-  - 下载地址：[.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)，下载自己系统的.NET 8 运行时即可。
-![.NET8运行时](https://lei-1258171996.cos.ap-guangzhou.myqcloud.com/imgs/2024/202504142154045.jpg)
+- .NET 8.0 Runtime
+  - Download: [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), download the .NET 8 runtime for your system.
+![.NET8 Runtime](https://lei-1258171996.cos.ap-guangzhou.myqcloud.com/imgs/2024/202504142154045.jpg)
 
-## 许可证
+## License
 
 MIT License
 
-## 贡献指南
+## Contributing
 
-欢迎提交 Issue 和 Pull Request。
+Issues and Pull Requests are welcome.
