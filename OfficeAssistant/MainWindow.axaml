@@ -61,5 +61,11 @@
             <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
             <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
         </Grid>
+         <TextBlock Grid.Column="0"
+               Text="{Binding Version}"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom"
+               Margin="0,0,0,10"/>
     </Grid>
 </Window>

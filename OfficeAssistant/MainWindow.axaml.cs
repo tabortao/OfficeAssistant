@@ -12,9 +12,23 @@ namespace OfficeAssistant;
 
 public partial class MainWindow : Window
 {
+    // 存储选中的文件列表
     private readonly ObservableCollection<string> selectedFiles;
+    // 记录最后一次保存的文件路径
     private string? lastSavedFile;
 
+    // 获取应用程序版本号
+    public static string Version
+    {
+        get
+        {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var version = assembly.GetName().Version;
+            return $"V{version?.Major}.{version?.Minor}.{version?.Build}";
+        }
+    }
+
+    // 窗口构造函数
     public MainWindow()
     {
         InitializeComponent();
@@ -22,8 +36,10 @@ public partial class MainWindow : Window
         DataContext = this;
     }
 
+    // 公开选中文件列表的属性
     public ObservableCollection<string> SelectedFiles => selectedFiles;
 
+    // 选择PDF文件的方法
     private async Task SelectFiles()
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
@@ -33,6 +49,7 @@ public partial class MainWindow : Window
             FileTypeFilter = [FilePickerFileTypes.Pdf]
         });
 
+        // 添加新选择的文件到列表中，避免重复
         foreach (var file in files)
         {
             if (!selectedFiles.Contains(file.Path.LocalPath))
@@ -42,10 +59,13 @@ public partial class MainWindow : Window
         }
     }
 
+    // 合并PDF文件的方法
     private async Task MergeFiles()
     {
+        // 至少需要两个文件才能合并
         if (selectedFiles.Count < 2) return;
 
+        // 选择保存位置
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "保存合并后的PDF",
@@ -57,6 +77,7 @@ public partial class MainWindow : Window
 
         try
         {
+            // 创建新的PDF文档并合并所有页面
             using (var output = new PdfDocument())
             {
                 foreach (var path in selectedFiles)
@@ -86,6 +107,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
+            // 显示错误消息
             var messageText = this.FindControl<TextBlock>("MessageText");
             if (messageText != null)
             {
@@ -101,21 +123,25 @@ public partial class MainWindow : Window
         }
     }
 
+    // 从列表中移除文件
     private void RemoveFile(string file)
     {
         selectedFiles.Remove(file);
     }
 
+    // 选择文件按钮点击事件处理
     private async void SelectFiles(object sender, RoutedEventArgs e)
     {
         await SelectFiles();
     }
 
+    // 合并文件按钮点击事件处理
     private async void MergeFiles(object sender, RoutedEventArgs e)
     {
         await MergeFiles();
     }
 
+    // 移除文件按钮点击事件处理
     private void RemoveFile(object sender, RoutedEventArgs e)
     {
         if (e.Source is Button button && button.CommandParameter is string file)
@@ -124,8 +150,10 @@ public partial class MainWindow : Window
         }
     }
 
+    // 导航栏选择变更事件处理
     private void OnNavigationSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // 根据选择的导航项显示对应的视图
         if (NavigationList.SelectedIndex == 0)
         {
             PdfMergeView.IsVisible = true;
