@@ -34,6 +34,7 @@
                     </Style>
                 </ListBox.Styles>
 
+                <!-- 确保所有ListBoxItem都正确闭合 -->
                 <ListBoxItem IsSelected="True">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfMerge24.png" Width="24" Height="24"/>
@@ -50,6 +51,13 @@
                 
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfCompress24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF批量压缩" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
+                
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfReplace24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量替换" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
@@ -61,6 +69,7 @@
             <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
             <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
             <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
+            <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
         </Grid>
          <TextBlock Grid.Column="0"
                Text="{Binding Version}"

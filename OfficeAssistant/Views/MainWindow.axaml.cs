@@ -153,24 +153,19 @@ public partial class MainWindow : Window
     // 导航栏选择变更事件处理
     private void OnNavigationSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // 重置所有视图为不可见
+        PdfMergeView.IsVisible = false;
+        PdfSplitView.IsVisible = false;
+        PdfCompressView.IsVisible = false;
+        PdfReplaceView.IsVisible = false;
+
         // 根据选择的导航项显示对应的视图
-        if (NavigationList.SelectedIndex == 0)
+        switch(NavigationList.SelectedIndex)
         {
-            PdfMergeView.IsVisible = true;
-            PdfSplitView.IsVisible = false;
-            PdfReplaceView.IsVisible = false;
-        }
-        else if (NavigationList.SelectedIndex == 1)
-        {
-            PdfMergeView.IsVisible = false;
-            PdfSplitView.IsVisible = true;
-            PdfReplaceView.IsVisible = false;
-        }
-        else if (NavigationList.SelectedIndex == 2)
-        {
-            PdfMergeView.IsVisible = false;
-            PdfSplitView.IsVisible = false;
-            PdfReplaceView.IsVisible = true;
+            case 0: PdfMergeView.IsVisible = true; break;
+            case 1: PdfSplitView.IsVisible = true; break;
+            case 2: PdfCompressView.IsVisible = true; break;
+            case 3: PdfReplaceView.IsVisible = true; break;
         }
     }
 }
