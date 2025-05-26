@@ -62,6 +62,13 @@
                         <TextBlock Text="PDF批量替换" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
+                
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfInsert24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF批量插入" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
             </ListBox>
         </Border>
 
@@ -69,6 +76,7 @@
             <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
             <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
             <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
+            <views:PdfInsertView x:Name="PdfInsertView" IsVisible="False"/>
             <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
         </Grid>
          <TextBlock Grid.Column="0"

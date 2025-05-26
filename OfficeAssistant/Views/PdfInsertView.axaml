@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OfficeAssistant.Views.PdfInsertView">
+    <Border Background="#FAFAFA" CornerRadius="12" BoxShadow="0 2 8 0 #88888840" Padding="24">
+        <StackPanel Spacing="18">
+            <!-- 标题 -->
+            <TextBlock Text="PDF页面插入" FontSize="22" FontWeight="Bold" Foreground="#2D6A4F" Margin="0,0,0,8"/>
+            
+            <!-- 源文件区域 -->
+            <Border Background="#F1F8E9" CornerRadius="8" Padding="14">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="源PDF文件（将被插入页面的文件）" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Background="#E6E6E6" CornerRadius="6" Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Image Source="/Resources/Upload.png" Width="18" Height="18"/>
+                                <TextBlock Text="选择源PDF文件" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Click>SelectSourceFiles</Button.Click>
+                        </Button>
+                        <Button Background="#F8D7DA" Foreground="#B71C1C" CornerRadius="6" Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Image Source="/Resources/Delete.png" Width="18" Height="18"/>
+                                <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Click>ClearSourceFiles</Button.Click>
+                        </Button>
+                    </StackPanel>
+                    
+                    <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                        <ListBox ItemsSource="{Binding SourceFiles}" MaxHeight="120">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                        <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
+                                                Padding="4,0" Margin="8,0,0,0"
+                                                Click="RemoveSourceFile"
+                                                CommandParameter="{Binding}"
+                                                DockPanel.Dock="Right"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- 插入文件区域 -->
+            <Border Background="#F1F8E9" CornerRadius="8" Padding="14">
+                <StackPanel Spacing="12">
+                    <DockPanel LastChildFill="True">
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,20,0">
+                            <TextBlock Text="插入页码:" VerticalAlignment="Center"/>
+                            <TextBox Width="80" Text="{Binding PageNumber}" Watermark="页码"
+                                     Background="White" CornerRadius="4"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8" DockPanel.Dock="Right">
+                            <RadioButton Content="之前" IsChecked="{Binding InsertBefore}" Margin="0,0,8,0"/>
+                            <RadioButton Content="之后" IsChecked="{Binding !InsertBefore}"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <TextBlock Text="待插入PDF文件" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Background="#E6E6E6" CornerRadius="6" Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Image Source="/Resources/Upload.png" Width="18" Height="18"/>
+                                <TextBlock Text="选择待插入PDF文件" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Click>SelectInsertFile</Button.Click>
+                        </Button>
+                        <Button Background="#F8D7DA" Foreground="#B71C1C" CornerRadius="6" Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Image Source="/Resources/Delete.png" Width="18" Height="18"/>
+                                <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Click>ClearInsertFile</Button.Click>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding InsertFile}" Margin="0,0,0,8"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 状态与操作按钮 -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding StatusMessage}"
+                          HorizontalAlignment="Center"
+                          FontSize="14"
+                          Foreground="#388E3C"/>
+                          
+                <Button Click="InsertPages"
+                        IsEnabled="{Binding SourceFiles.Count}"
+                        HorizontalAlignment="Right"
+                        Background="#388E3C"
+                        Foreground="White"
+                        CornerRadius="8"
+                        Padding="12,6">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Image Source="/Resources/start.ico" Width="18" Height="18"/>
+                        <TextBlock Text="开始插入" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

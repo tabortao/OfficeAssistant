@@ -158,6 +158,7 @@ public partial class MainWindow : Window
         PdfSplitView.IsVisible = false;
         PdfCompressView.IsVisible = false;
         PdfReplaceView.IsVisible = false;
+        PdfInsertView.IsVisible = false;
 
         // 根据选择的导航项显示对应的视图
         switch(NavigationList.SelectedIndex)
@@ -166,6 +167,7 @@ public partial class MainWindow : Window
             case 1: PdfSplitView.IsVisible = true; break;
             case 2: PdfCompressView.IsVisible = true; break;
             case 3: PdfReplaceView.IsVisible = true; break;
+            case 4: PdfInsertView.IsVisible = true; break;
         }
     }
 }
