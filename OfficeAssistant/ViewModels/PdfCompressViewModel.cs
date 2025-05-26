@@ -246,14 +246,14 @@ namespace OfficeAssistant.ViewModels
 
             // 2. 可选：检查常见安装目录 (以Windows为例，您可以根据需要添加其他平台的路径)
             string[] commonDirs = 
-            {
+            [
                 // 注意：这里的路径应该指向包含可执行文件的bin目录
                 @"C:\Program Files\gs\gs10.05.1\bin", 
                 @"D:\Program Files\gs\gs10.05.1\bin",
                 // Linux/macOS 示例 (通常gs在PATH中)
-                // "/usr/bin/", 
-                // "/usr/local/bin/"
-            };
+                "/usr/bin/", 
+                "/usr/local/bin/"
+            ];
 
             foreach (var dir in commonDirs)
             {
@@ -305,7 +305,7 @@ namespace OfficeAssistant.ViewModels
                             "-sOutputFile=\"{0}\" \"{1}\"",
                             currentOutputFile, currentInputFile);
 
-                        ProcessStartInfo startInfo = new ProcessStartInfo
+                        ProcessStartInfo startInfo = new()
                         {
                             FileName = gsPath,
                             Arguments = arguments,
@@ -315,7 +315,8 @@ namespace OfficeAssistant.ViewModels
                             RedirectStandardError = true
                         };
 
-                        using (Process process = new Process { StartInfo = startInfo })
+                        using (Process process = new()
+                        { StartInfo = startInfo })
                         {
                             process.Start();
                             string output = process.StandardOutput.ReadToEnd(); // 可以选择记录输出

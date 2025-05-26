@@ -92,6 +92,17 @@ dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile
 4. 在文件列表中查看和管理已选文件
 5. 点击"合并PDF"按钮选择保存位置并完成合并
 
+### PDF 批量压缩
+1. 在左侧导航栏选择"PDF压缩"
+2. 点击"选择PDF文件"按钮选择需要压缩的PDF文件
+3. 选择压缩等级：
+   - 低/中/高：使用预设的压缩等级
+   - 自定义：手动输入1-100之间的压缩等级
+4. 可选：点击"选择输出目录"设置压缩后文件的保存位置
+   - 若未设置，将在原文件所在目录创建"压缩文件"文件夹
+5. 点击"开始压缩"按钮开始处理
+6. 处理过程中可查看进度条和状态信息
+
 ### PDF 批量拆分
 1. 在左侧导航栏选择"PDF拆分"
 2. 点击"选择PDF文件"按钮选择需要拆分的PDF文件
@@ -116,7 +127,11 @@ dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile
 - .NET 8.0 运行时
   - 下载地址：[.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)，下载自己系统的.NET 8 运行时即可。
 ![.NET8运行时](https://lei-1258171996.cos.ap-guangzhou.myqcloud.com/imgs/2024/202504142154045.jpg)
-
+- Ghostscript
+ - 下载地址：[Ghostscript官网下载](https://ghostscript.com/releases/gsdnld.html)、[Ghostscript Github下载](https://github.com/ArtifexSoftware/ghostpdl-downloads/releases)
+ - Mac电脑安装：`brew install ghostscript`
+ - Linux电脑安装：`sudo apt install ghostscript`
+ 
 ## 许可证
 
 MIT License

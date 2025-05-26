@@ -1,99 +1,95 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="OfficeAssistant.Views.PdfSplitView">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-            <Button Background="#E6E6E6">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Image Source="/Resources/Upload.png" Width="16" Height="16"/>
-                    <TextBlock Text="选择PDF文件" VerticalAlignment="Center"/>
-                </StackPanel>
-                <Button.Click>SelectFiles</Button.Click>
-            </Button>
-            <Button Background="#E6E6E6">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Image Source="/Resources/PdfOutput24.png" Width="16" Height="16"/>
-                    <TextBlock Text="选择输出目录" VerticalAlignment="Center"/>
-                </StackPanel>
-                <Button.Click>SelectOutputPath</Button.Click>
-            </Button>
-            <Button Background="#E6E6E6">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Image Source="/Resources/Delete.png" Width="16" Height="16"/>
-                    <TextBlock Text="清除所选" VerticalAlignment="Center"/>
-                </StackPanel>
-                <Button.Click>ClearAllFiles</Button.Click>
-            </Button>
-            <!-- <Button Content="选择PDF文件" Click="SelectFiles"/> -->
-            <!-- <Button Content="选择输出目录" Click="SelectOutputPath"/> -->
-            <!-- <Button Content="清除所选PDF文件" Click="ClearAllFiles"/> -->
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Margin="0,10">
-            <RadioButton Content="每页拆分为单独PDF" 
-                        IsChecked="{Binding IsSplitByPage}"
-                        GroupName="SplitMode"/>
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <RadioButton Content="按页码范围拆分" 
-                            IsChecked="{Binding !IsSplitByPage}"
-                            GroupName="SplitMode"/>
-                <TextBox Width="200" 
-                         Text="{Binding PageRange}"
-                         Watermark="例如: 1-3,5,7-9"
-                         IsEnabled="{Binding !IsSplitByPage}"/>
+    <Border Background="#FAFAFA" CornerRadius="12" BoxShadow="0 2 8 0 #88888840" Padding="24">
+        <StackPanel Spacing="18">
+            <!-- 标题 -->
+            <TextBlock Text="PDF拆分" FontSize="22" FontWeight="Bold" Foreground="#2D6A4F" Margin="0,0,0,8"/>
+            
+            <!-- 文件选择区域 -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Background="#E6E6E6" CornerRadius="6" Padding="8,4">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Image Source="/Resources/Upload.png" Width="18" Height="18"/>
+                        <TextBlock Text="选择PDF文件" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Click>SelectFiles</Button.Click>
+                </Button>
+                <Button Background="#F8D7DA" Foreground="#B71C1C" CornerRadius="6" Padding="8,4">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Image Source="/Resources/Delete.png" Width="18" Height="18"/>
+                        <TextBlock Text="清除所选" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Click>ClearAllFiles</Button.Click>
+                </Button>
             </StackPanel>
+
+            <!-- 文件列表 -->
+            <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                <ListBox ItemsSource="{Binding SelectedFiles}" MaxHeight="120">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="False">
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
+                                        Padding="4,0" Margin="8,0,0,0"
+                                        Click="RemoveFile"
+                                        CommandParameter="{Binding}"
+                                        DockPanel.Dock="Right"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <!-- 拆分设置区域 -->
+            <Border Background="#F1F8E9" CornerRadius="8" Padding="14">
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="18">
+                        <TextBlock Text="拆分模式：" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <RadioButton Content="每页拆分" IsChecked="{Binding IsSplitByPage}"/>
+                        <RadioButton Content="按页码范围" IsChecked="{Binding !IsSplitByPage}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding !IsSplitByPage}">
+                        <TextBlock Text="页码范围：" VerticalAlignment="Center"/>
+                        <TextBox Width="200" Text="{Binding PageRange}" Watermark="例如：1-3,5,7-9"/>
+                        <TextBlock Text="(支持单页和范围，用逗号分隔)" Foreground="#666" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Background="#E6E6E6" CornerRadius="6" Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Image Source="/Resources/PdfOutput24.png" Width="16" Height="16"/>
+                                <TextBlock Text="选择输出目录" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Click>SelectOutputPath</Button.Click>
+                        </Button>
+                        <TextBlock Text="{Binding OutputPath}" Margin="12,0,0,0" VerticalAlignment="Center" 
+                                 Foreground="#888" FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 状态显示 -->
+            <TextBlock Text="{Binding StatusMessage}"
+                      HorizontalAlignment="Center"
+                      FontSize="14"
+                      Foreground="#388E3C"/>
+
+            <!-- 拆分按钮 -->
+            <Button Click="SplitFiles"
+                    IsEnabled="{Binding SelectedFiles.Count}"
+                    HorizontalAlignment="Right"
+                    Background="#388E3C"
+                    Foreground="White"
+                    CornerRadius="8"
+                    Padding="12,6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image Source="/Resources/start.ico" Width="18" Height="18"/>
+                    <TextBlock Text="开始拆分" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
-
-        <ListBox Grid.Row="2" 
-                 ItemsSource="{Binding SelectedFiles}"
-                 Margin="0,10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding}" />
-                        <Button Grid.Column="1" 
-                                Content="删除"
-                                Click="RemoveFile"
-                                CommandParameter="{Binding}"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-        <TextBlock Grid.Row="3" 
-                   Text="{Binding OutputPath}"
-                   Margin="0,10"/>
-
-        <TextBlock Grid.Row="4" 
-                   Text="{Binding StatusMessage}"
-                   Margin="0,10"
-                   Foreground="Green"/>
-        <Button Grid.Row="5" 
-                Click="SplitFiles"
-                IsEnabled="{Binding SelectedFiles.Count}"
-                HorizontalAlignment="Right">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <Image Source="/Resources/start.ico" Width="16" Height="16"/>
-                <TextBlock Text="开始拆分" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <!-- <Button Grid.Row="5" 
-                Content="开始拆分" 
-                Click="SplitFiles"
-                IsEnabled="{Binding SelectedFiles.Count}"
-                HorizontalAlignment="Right"/> -->
-    </Grid>
+    </Border>
 </UserControl>
