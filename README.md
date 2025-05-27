@@ -12,7 +12,7 @@ Key Features:
 - 🛠 Extensibility: Based on MVVM architecture, easy to extend new features
 - 📦 Lightweight: Single-file deployment, no installation required, ready to use
 
-![Image](https://github.com/user-attachments/assets/ea265412-f210-4573-a6f3-3bbc72f26248)
+![Image](https://github.com/user-attachments/assets/39d7007a-e3fd-414b-8d60-b53c3d52db9e)
 
 ## Features
 

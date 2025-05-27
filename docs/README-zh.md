@@ -11,7 +11,7 @@ Office Assistant 是一款基于 Avalonia UI 开发的跨平台办公助手，�
 - 🛠 可扩展性：基于 MVVM 架构，易于扩展新功能
 - 📦 轻量级：单文件发布，无需安装，即点即用
 
-![Image](https://github.com/user-attachments/assets/ea265412-f210-4573-a6f3-3bbc72f26248)
+![Image](https://github.com/user-attachments/assets/39d7007a-e3fd-414b-8d60-b53c3d52db9e)
 
 ## 功能特性
 
@@ -44,7 +44,7 @@ Office Assistant 是一款基于 Avalonia UI 开发的跨平台办公助手，�
 ## 开发环境要求
 
 - .NET 8.0 SDK
-- Visual Studio 2022 或其他支持 .NET 的 IDE
+- Visual Studio Code 或其他支持 .NET 的 IDE
 
 ## 使用的技术
 
