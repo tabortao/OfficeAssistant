@@ -2,7 +2,7 @@
 ; 每次发布需要注意修改版本号。
 
 #define MyAppName "OfficeAssistant"
-#define MyAppVersion "1.1.3"
+#define MyAppVersion "1.1.4"
 #define MyAppPublisher "OfficeAssistant, Inc."
 #define MyAppURL "https://www.officeassistant.com/"
 #define MyAppExeName "OfficeAssistant.exe"

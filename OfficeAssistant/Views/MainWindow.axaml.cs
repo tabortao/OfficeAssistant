@@ -29,9 +29,33 @@ public partial class MainWindow : Window
     }
 
     // 窗口构造函数
+    private readonly PdfMergeView? _pdfMergeView;
+    private readonly PdfSplitView? _pdfSplitView;
+    private readonly PdfReplaceView? _pdfReplaceView;
+    private readonly PdfDeleteView? _pdfDeleteView;
+    private readonly PdfInsertView? _pdfInsertView;
+    private readonly PdfCompressView? _pdfCompressView;
+
     public MainWindow()
     {
         InitializeComponent();
+        // DataContext = new ViewModels.MainWindowViewModel();
+
+        // 查找并初始化所有视图
+        _pdfMergeView = this.Find<PdfMergeView>("PdfMergeView");
+        _pdfSplitView = this.Find<PdfSplitView>("PdfSplitView");
+        _pdfReplaceView = this.Find<PdfReplaceView>("PdfReplaceView");
+        _pdfDeleteView = this.Find<PdfDeleteView>("PdfDeleteView");
+        _pdfInsertView = this.Find<PdfInsertView>("PdfInsertView");
+        _pdfCompressView = this.Find<PdfCompressView>("PdfCompressView");
+
+        // 验证所有必需的视图都已找到
+        if (_pdfMergeView == null || _pdfSplitView == null || _pdfReplaceView == null ||
+            _pdfDeleteView == null || _pdfInsertView == null || _pdfCompressView == null)
+        {
+            throw new InvalidOperationException("无法找到所有必需的视图控件");
+        }
+
         selectedFiles = [];
         DataContext = this;
     }
@@ -151,23 +175,18 @@ public partial class MainWindow : Window
     }
 
     // 导航栏选择变更事件处理
-    private void OnNavigationSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void OnNavigationSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        // 重置所有视图为不可见
-        PdfMergeView.IsVisible = false;
-        PdfSplitView.IsVisible = false;
-        PdfCompressView.IsVisible = false;
-        PdfReplaceView.IsVisible = false;
-        PdfInsertView.IsVisible = false;
-
-        // 根据选择的导航项显示对应的视图
-        switch(NavigationList.SelectedIndex)
+        if (sender is ListBox listBox && 
+            _pdfMergeView != null && _pdfSplitView != null && _pdfReplaceView != null &&
+            _pdfDeleteView != null && _pdfInsertView != null && _pdfCompressView != null)
         {
-            case 0: PdfMergeView.IsVisible = true; break;
-            case 1: PdfSplitView.IsVisible = true; break;
-            case 2: PdfCompressView.IsVisible = true; break;
-            case 3: PdfReplaceView.IsVisible = true; break;
-            case 4: PdfInsertView.IsVisible = true; break;
+            _pdfMergeView.IsVisible = listBox.SelectedIndex == 0;
+            _pdfSplitView.IsVisible = listBox.SelectedIndex == 1;
+            _pdfCompressView.IsVisible = listBox.SelectedIndex == 2;
+            _pdfReplaceView.IsVisible = listBox.SelectedIndex == 3;
+            _pdfDeleteView.IsVisible = listBox.SelectedIndex == 4;
+            _pdfInsertView.IsVisible = listBox.SelectedIndex == 5;
         }
     }
 }
