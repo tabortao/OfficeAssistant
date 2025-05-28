@@ -12,15 +12,43 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- 左侧图标栏 -->
-        <Border Grid.Column="0" Background="#2D2D2D" BorderBrush="#444" BorderThickness="0,0,1,0">
-            <StackPanel VerticalAlignment="Top" Spacing="20" Margin="0,30,0,0">
-                <Button Name="PdfIconButton" Background="Transparent" BorderBrush="Transparent" Padding="0" Margin="0,0,0,0" Click="OnPdfIconClick">
-                    <Image Source="/Resources/Pdf64.png" Width="32" Height="32"/>
-                </Button>
-                <Button Name="OcrIconButton" Background="Transparent" BorderBrush="Transparent" Padding="0" Margin="0,0,0,0" Click="OnOcrIconClick">
-                    <Image Source="/Resources/OCR64.png" Width="24" Height="24"/>
-                </Button>
+        <!-- 左侧图标栏美化，图标居中且顶对齐，无间距，右上和右下无圆角 -->
+        <Border Grid.Column="0" Background="#23272F" BorderBrush="#444" BorderThickness="0,0,1,0" CornerRadius="0,0,0,0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Spacing="0">
+            <Button Name="PdfIconButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Padding="8"
+                Width="44" Height="44"
+                Click="OnPdfIconClick"
+                ToolTip.Tip="PDF工具">
+                <Button.Styles>
+                <Style Selector="Button:pointerover">
+                    <Setter Property="Background" Value="#334A90E2"/>
+                </Style>
+                <Style Selector="Button:pressed">
+                    <Setter Property="Background" Value="#225A90E2"/>
+                </Style>
+                </Button.Styles>
+                <Image Source="/Resources/Pdf64.png" Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+            <Button Name="OcrIconButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Padding="8"
+                Width="44" Height="44"
+                Click="OnOcrIconClick"
+                ToolTip.Tip="OCR工具">
+                <Button.Styles>
+                <Style Selector="Button:pointerover">
+                    <Setter Property="Background" Value="#334A90E2"/>
+                </Style>
+                <Style Selector="Button:pressed">
+                    <Setter Property="Background" Value="#225A90E2"/>
+                </Style>
+                </Button.Styles>
+                <Image Source="/Resources/OCR64.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
             </StackPanel>
         </Border>
 
