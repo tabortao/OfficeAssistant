@@ -1,17 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using OfficeAssistant.ViewModels;
+using OfficeAssistant.ViewModels.PDF;
 
-namespace OfficeAssistant.Views
+namespace OfficeAssistant.Views.PDF
 {
-    public partial class PdfMergeView : UserControl
+    public partial class PdfDeleteView : UserControl
     {
-        private readonly PdfMergeViewModel _viewModel;
+        private readonly OfficeAssistant.ViewModels.PDF.PdfDeleteViewModel _viewModel;
 
-        public PdfMergeView()
+        public PdfDeleteView()
         {
             InitializeComponent();
-            _viewModel = new PdfMergeViewModel();
+            _viewModel = new PdfDeleteViewModel();
             DataContext = _viewModel;
         }
 
@@ -28,14 +28,14 @@ namespace OfficeAssistant.Views
             }
         }
 
-        private async void MergeFiles(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.MergeFiles();
-        }
-
         private void ClearAllFiles(object sender, RoutedEventArgs e)
         {
             _viewModel.ClearAllFiles();
+        }
+
+        private async void DeletePages(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.DeletePages();
         }
     }
 }

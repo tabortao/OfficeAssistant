@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
+using OfficeAssistant.Views.PDF;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

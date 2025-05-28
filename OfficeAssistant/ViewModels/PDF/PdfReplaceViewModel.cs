@@ -6,24 +6,22 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OfficeAssistant.ViewModels
+namespace OfficeAssistant.ViewModels.PDF
 {
     /// <summary>
-    /// PDF页面插入功能的视图模型
+    /// PDF页面替换功能的视图模型
     /// </summary>
-    public partial class PdfInsertViewModel : ViewModelBase
+    public partial class PdfReplaceViewModel : ViewModelBase
     {
         // 状态消息，用于显示操作结果
         private string _statusMessage = "";
-        // 要插入的页码
+        // 要替换的页码
         private string _pageNumber = "1";
-        // 插入位置（之前或之后）
-        private bool _insertBefore = true;
 
-        // 源PDF文件集合（将被插入页面的文件）
+        // 源PDF文件集合（将被替换页面的文件）
         public ObservableCollection<string> SourceFiles { get; } = [];
-        // 待插入PDF文件
-        public string InsertFile { get; set; } = "";
+        // 替换PDF文件集合（用于替换的文件）
+        public ObservableCollection<string> ReplacementFiles { get; } = [];
 
         // 状态消息属性
         public string StatusMessage
@@ -37,13 +35,6 @@ namespace OfficeAssistant.ViewModels
         {
             get => _pageNumber;
             set => SetField(ref _pageNumber, value);
-        }
-
-        // 插入位置属性
-        public bool InsertBefore
-        {
-            get => _insertBefore;
-            set => SetField(ref _insertBefore, value);
         }
 
         /// <summary>
@@ -75,22 +66,30 @@ namespace OfficeAssistant.ViewModels
         }
 
         /// <summary>
-        /// 选择待插入的PDF文件
+        /// 选择用于替换的PDF文件
         /// </summary>
-        public async Task SelectInsertFile()
+        public async Task SelectReplacementFiles()
         {
             var storageProvider = App.MainWindow.StorageProvider;
-            // 打开文件选择器，选择单个PDF文件
+            // 打开文件选择器，允许多选PDF文件
             var files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
-                AllowMultiple = false,
+                AllowMultiple = true,
                 FileTypeFilter = [new FilePickerFileType("PDF Files") { Patterns = ["*.pdf"] }]
             });
 
             // 如果用户选择了文件
             if (files != null && files.Count > 0)
             {
-                InsertFile = files[0].Path.LocalPath;
+                foreach (var file in files)
+                {
+                    var path = file.Path.LocalPath;
+                    // 避免重复添加相同的文件
+                    if (!ReplacementFiles.Contains(path))
+                    {
+                        ReplacementFiles.Add(path);
+                    }
+                }
             }
         }
 
@@ -103,6 +102,14 @@ namespace OfficeAssistant.ViewModels
         }
 
         /// <summary>
+        /// 从列表中移除指定的替换文件
+        /// </summary>
+        public void RemoveReplacementFile(string file)
+        {
+            ReplacementFiles.Remove(file);
+        }
+
+        /// <summary>
         /// 清除所有源文件
         /// </summary>
         public void ClearSourceFiles()
@@ -111,22 +118,29 @@ namespace OfficeAssistant.ViewModels
         }
 
         /// <summary>
-        /// 清除待插入文件
+        /// 清除所有替换文件
         /// </summary>
-        public void ClearInsertFile()
+        public void ClearReplacementFiles()
         {
-            InsertFile = "";
+            ReplacementFiles.Clear();
         }
 
         /// <summary>
-        /// 执行PDF页面插入操作
+        /// 执行PDF页面替换操作
         /// </summary>
-        public async Task InsertPages()
+        public async Task ReplacePages()
         {
             // 验证是否选择了文件
-            if (SourceFiles.Count == 0 || string.IsNullOrEmpty(InsertFile))
+            if (SourceFiles.Count == 0 || ReplacementFiles.Count == 0)
             {
-                await ShowTemporaryMessage("请选择源PDF文件和待插入PDF文件", message => StatusMessage = message);
+                await ShowTemporaryMessage("请选择源PDF文件和替换PDF文件", message => StatusMessage = message);
+                return;
+            }
+
+            // 验证源文件和替换文件数量是否一致
+            if (SourceFiles.Count != ReplacementFiles.Count)
+            {
+                await ShowTemporaryMessage("源PDF文件数量必须与替换PDF文件数量一致", message => StatusMessage = message);
                 return;
             }
 
@@ -139,28 +153,30 @@ namespace OfficeAssistant.ViewModels
 
             try
             {
-                // 在后台线程执行PDF插入操作
+                // 在后台线程执行PDF替换操作
                 await Task.Run(() =>
                 {
-                    // 以导入模式打开待插入文件
-                    using var insertDoc = PdfReader.Open(InsertFile, PdfDocumentOpenMode.Import);
-
-                    // 验证待插入文件是否有页面
-                    if (insertDoc.PageCount == 0)
+                    // 遍历所有文件对
+                    for (int i = 0; i < SourceFiles.Count; i++)
                     {
-                        throw new Exception($"待插入文件 {Path.GetFileName(InsertFile)} 没有页面");
-                    }
+                        string sourceFile = SourceFiles[i];
+                        string replacementFile = ReplacementFiles[i];
 
-                    // 遍历所有源文件
-                    foreach (string sourceFile in SourceFiles)
-                    {
                         // 以导入模式打开源文件
                         using var sourceDoc = PdfReader.Open(sourceFile, PdfDocumentOpenMode.Import);
+                        // 以导入模式打开替换文件
+                        using var replacementDoc = PdfReader.Open(replacementFile, PdfDocumentOpenMode.Import);
 
                         // 验证源文件页码是否有效
-                        if (pageIndex > sourceDoc.PageCount + 1)
+                        if (pageIndex > sourceDoc.PageCount)
                         {
-                            throw new Exception($"文件 {Path.GetFileName(sourceFile)} 的页数少于 {pageIndex - 1}");
+                            throw new Exception($"文件 {Path.GetFileName(sourceFile)} 的页数少于 {pageIndex}");
+                        }
+
+                        // 验证替换文件是否有页面
+                        if (replacementDoc.PageCount == 0)
+                        {
+                            throw new Exception($"替换文件 {Path.GetFileName(replacementFile)} 没有页面");
                         }
 
                         // 创建新的PDF文档
@@ -172,15 +188,9 @@ namespace OfficeAssistant.ViewModels
                             outputDoc.AddPage(sourceDoc.Pages[j]);
                         }
 
-                        // 插入页面到指定位置
-                        if (InsertBefore)
-                        {
-                            outputDoc.Pages.Insert(pageIndex - 1, insertDoc.Pages[0]);
-                        }
-                        else
-                        {
-                            outputDoc.Pages.Insert(pageIndex, insertDoc.Pages[0]);
-                        }
+                        // 替换指定页面：先移除原页面，再插入新页面
+                        outputDoc.Pages.Remove(outputDoc.Pages[pageIndex - 1]);
+                        outputDoc.Pages.Insert(pageIndex - 1, replacementDoc.Pages[0]);
 
                         // 保存文档，直接覆盖源文件
                         outputDoc.Save(sourceFile);
@@ -188,12 +198,12 @@ namespace OfficeAssistant.ViewModels
                 });
 
                 // 显示成功消息
-                await ShowTemporaryMessage("PDF页面插入完成！源文件已被覆盖", message => StatusMessage = message);
+                await ShowTemporaryMessage("PDF页面替换完成！源文件已被覆盖", message => StatusMessage = message);
             }
             catch (Exception ex)
             {
                 // 显示错误消息
-                await ShowTemporaryMessage($"插入失败：{ex.Message}", message => StatusMessage = message);
+                await ShowTemporaryMessage($"替换失败：{ex.Message}", message => StatusMessage = message);
             }
         }
     }

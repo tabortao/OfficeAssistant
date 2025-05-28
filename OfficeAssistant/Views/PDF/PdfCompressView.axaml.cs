@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using OfficeAssistant.ViewModels;
+using OfficeAssistant.ViewModels.PDF;
 
-namespace OfficeAssistant.Views
+namespace OfficeAssistant.Views.PDF
 {
     public partial class PdfCompressView : UserControl
     {
-        private readonly PdfCompressViewModel _viewModel;
+        private readonly OfficeAssistant.ViewModels.PDF.PdfCompressViewModel _viewModel;
 
         public PdfCompressView()
         {

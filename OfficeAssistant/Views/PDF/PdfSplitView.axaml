@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="OfficeAssistant.Views.PdfSplitView">
+             x:Class="OfficeAssistant.Views.PDF.PdfSplitView">
     <Border Background="#FAFAFA" CornerRadius="12" BoxShadow="0 2 8 0 #88888840" Padding="24">
         <StackPanel Spacing="18">
             <!-- 标题 -->

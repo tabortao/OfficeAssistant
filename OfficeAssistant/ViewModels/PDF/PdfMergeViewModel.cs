@@ -5,7 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace OfficeAssistant.ViewModels
+namespace OfficeAssistant.ViewModels.PDF
 {
     /// <summary>
     /// PDF合并功能的视图模型

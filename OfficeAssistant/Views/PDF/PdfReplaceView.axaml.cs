@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using OfficeAssistant.ViewModels;
+using OfficeAssistant.ViewModels.PDF;
 
-namespace OfficeAssistant.Views
+namespace OfficeAssistant.Views.PDF
 {
     public partial class PdfReplaceView : UserControl
     {
-        private readonly PdfReplaceViewModel _viewModel;
+        private readonly OfficeAssistant.ViewModels.PDF.PdfReplaceViewModel _viewModel;
 
         public PdfReplaceView()
         {

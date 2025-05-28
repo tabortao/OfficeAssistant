@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OfficeAssistant.ViewModels
+namespace OfficeAssistant.ViewModels.PDF
 {
     /// <summary>
     /// PDF页面删除功能的视图模型

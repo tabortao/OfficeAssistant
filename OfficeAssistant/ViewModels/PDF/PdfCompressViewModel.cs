@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 
-namespace OfficeAssistant.ViewModels
+namespace OfficeAssistant.ViewModels.PDF
 {
     /// <summary>
     /// PDF压缩功能的视图模型

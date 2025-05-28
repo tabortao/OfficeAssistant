@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using OfficeAssistant.ViewModels;
+using OfficeAssistant.ViewModels.PDF;
 
-namespace OfficeAssistant.Views
+namespace OfficeAssistant.Views.PDF
 {
     public partial class PdfInsertView : UserControl
     {
-        private readonly PdfInsertViewModel _viewModel;
+        private readonly OfficeAssistant.ViewModels.PDF.PdfInsertViewModel _viewModel;
 
         public PdfInsertView()
         {

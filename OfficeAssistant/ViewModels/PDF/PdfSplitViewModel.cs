@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OfficeAssistant.ViewModels
+namespace OfficeAssistant.ViewModels.PDF
 {
     /// <summary>
     /// PDF拆分功能的视图模型

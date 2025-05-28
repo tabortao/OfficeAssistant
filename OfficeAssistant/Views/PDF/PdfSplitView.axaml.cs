@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using OfficeAssistant.ViewModels;
+using OfficeAssistant.ViewModels.PDF;
 
-namespace OfficeAssistant.Views
+namespace OfficeAssistant.Views.PDF
 {
     public partial class PdfSplitView : UserControl
     {
-        private readonly PdfSplitViewModel _viewModel;
+        private readonly OfficeAssistant.ViewModels.PDF.PdfSplitViewModel _viewModel;
 
         public PdfSplitView()
         {
