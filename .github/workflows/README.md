@@ -1,5 +1,8 @@
 # 发布流程
 使用方法：
+1. VS Code 提交代码，修改好ChangeLogs.md
+2. GitHub Release v*.*.*
+3. GitHub Actions 自动打包应用
 
 1. 当你要发布新版本时，只需要：
 ```bash
