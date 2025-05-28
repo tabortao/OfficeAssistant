@@ -190,4 +190,49 @@ public partial class MainWindow : Window
             _pdfInsertView.IsVisible = listBox.SelectedIndex == 5;
         }
     }
+
+    // Pdf图标点击事件，切换到PDF相关导航栏
+    private void OnPdfIconClick(object? sender, RoutedEventArgs e)
+    {
+        // 显示PDF相关导航栏
+        var navList = this.FindControl<ListBox>("NavigationList");
+        if (navList != null)
+        {
+            navList.IsVisible = true;
+            // 显示所有PDF相关导航项，隐藏OCR导航项
+            foreach (var item in navList.Items)
+            {
+                if (item is ListBoxItem lbi)
+                {
+                    if (lbi.Name == "OcrNavItem")
+                        lbi.IsVisible = false;
+                    else
+                        lbi.IsVisible = true;
+                }
+            }
+            // 默认选中第一个PDF功能
+            navList.SelectedIndex = 0;
+        }
+    }
+
+    // OCR图标点击事件，切换到OCR相关导航栏（预留，实际功能待开发）
+    private void OnOcrIconClick(object? sender, RoutedEventArgs e)
+    {
+        var navList = this.FindControl<ListBox>("NavigationList");
+        if (navList != null)
+        {
+            // 只显示OCR导航项，隐藏PDF相关项
+            navList.SelectedIndex = -1;
+            foreach (var item in navList.Items)
+            {
+                if (item is ListBoxItem lbi)
+                {
+                    if (lbi.Name == "OcrNavItem")
+                        lbi.IsVisible = true;
+                    else
+                        lbi.IsVisible = false;
+                }
+            }
+        }
+    }
 }

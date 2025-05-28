@@ -7,12 +7,25 @@
         Width="800" Height="600">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Background="#3C3C3C" 深灰色-->
-        <Border Grid.Column="0" 
+        <!-- 左侧图标栏 -->
+        <Border Grid.Column="0" Background="#2D2D2D" BorderBrush="#444" BorderThickness="0,0,1,0">
+            <StackPanel VerticalAlignment="Top" Spacing="20" Margin="0,30,0,0">
+                <Button Name="PdfIconButton" Background="Transparent" BorderBrush="Transparent" Padding="0" Margin="0,0,0,0" Click="OnPdfIconClick">
+                    <Image Source="/Resources/Pdf64.png" Width="32" Height="32"/>
+                </Button>
+                <Button Name="OcrIconButton" Background="Transparent" BorderBrush="Transparent" Padding="0" Margin="0,0,0,0" Click="OnOcrIconClick">
+                    <Image Source="/Resources/OCR64.png" Width="24" Height="24"/>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- 原有导航栏右移一列 -->
+        <Border Grid.Column="1" 
                 Background="#3C3C3C"
                 BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"
                 BorderThickness="0,0,1,0">
@@ -34,60 +47,63 @@
                     </Style>
                 </ListBox.Styles>
 
-                <!-- 确保所有ListBoxItem都正确闭合 -->
+                <!-- PDF相关功能 -->
                 <ListBoxItem IsSelected="True">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfMerge24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量合并" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-                
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfSplit24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量拆分" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-                
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfCompress24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量压缩" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-                
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfReplace24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量替换" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfDelete24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量删除" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-                
                 <ListBoxItem>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/PdfInsert24.png" Width="24" Height="24"/>
                         <TextBlock Text="PDF批量插入" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
+                <!-- 预留OCR相关功能导航项 -->
+                <ListBoxItem Name="OcrNavItem" IsVisible="False">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/OCR32.png" Width="24" Height="24"/>
+                        <TextBlock Text="OCR功能（待开发）" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
             </ListBox>
         </Border>
 
-        <Grid Grid.Column="1" x:Name="ContentArea">
+        <Grid Grid.Column="2" x:Name="ContentArea">
             <views:PdfMergeView x:Name="PdfMergeView" IsVisible="True"/>
             <views:PdfSplitView x:Name="PdfSplitView" IsVisible="False"/>
             <views:PdfReplaceView x:Name="PdfReplaceView" IsVisible="False"/>
             <views:PdfDeleteView x:Name="PdfDeleteView" IsVisible="False"/>
             <views:PdfInsertView x:Name="PdfInsertView" IsVisible="False"/>
             <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
+            <!-- 预留OCR相关内容控件 -->
         </Grid>
-         <TextBlock Grid.Column="0"
+        <TextBlock Grid.Column="1"
                Text="{Binding Version}"
                Foreground="White"
                HorizontalAlignment="Center"
