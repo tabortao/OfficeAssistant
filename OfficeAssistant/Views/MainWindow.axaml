@@ -52,7 +52,7 @@
             </StackPanel>
         </Border>
 
-        <!-- 原有导航栏右移一列 -->
+        <!-- 功能导航栏右移一列 -->
         <Border Grid.Column="1" 
                 Background="#3C3C3C"
                 BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"

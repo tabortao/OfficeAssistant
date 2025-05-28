@@ -4,6 +4,11 @@
 - .NET 8.0 Desktop Runtime
 - 下载地址：[.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-desktop-8.0.4-windows-x64-installer)
 
+## v1.1.5
+### 🔄 功能改进
+- 美化UI，左侧增加图标导航栏
+- 修复已知的Bug
+
 ## v1.1.4 
 ### ✨新增功能
 - 增加PDF批量删除功能
