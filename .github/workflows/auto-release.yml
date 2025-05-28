@@ -25,7 +25,7 @@ jobs:
         shell: pwsh
         run: |
           $version = "${{ steps.get_version.outputs.VERSION }}"
-          $content = Get-Content -Path "OfficeAssistant/docs/ChangeLogs.md" -Raw
+          $content = Get-Content -Path "docs/ChangeLogs.md" -Raw
           $pattern = "### $version \([^)]+\)(.*?)(?=### V\d|\z)"
           if ($content -match $pattern) {
               $notes = $matches[1].Trim()
