@@ -7,8 +7,10 @@
         Width="800" Height="600">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60" />
-            <ColumnDefinition Width="200" />
+            <!-- 设置左侧图标栏宽度 -->
+            <ColumnDefinition Width="50" />
+            <!-- 设置功能导航栏宽度 -->
+            <ColumnDefinition Width="160" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -116,7 +118,7 @@
                 <ListBoxItem Name="OcrNavItem" IsVisible="False">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Source="/Resources/OCR32.png" Width="24" Height="24"/>
-                        <TextBlock Text="OCR功能（待开发）" VerticalAlignment="Center" Foreground="White"/>
+                        <TextBlock Text="OCR功能" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
             </ListBox>
