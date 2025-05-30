@@ -114,6 +114,12 @@
                         <TextBlock Text="PDF批量插入" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Resources/PdfToImage24.png" Width="24" Height="24"/>
+                        <TextBlock Text="PDF转图片" VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </ListBoxItem>
                 <!-- 预留OCR相关功能导航项 -->
                 <ListBoxItem Name="OcrNavItem" IsVisible="False">
                     <StackPanel Orientation="Horizontal" Spacing="10">
@@ -131,6 +137,7 @@
             <views:PdfDeleteView x:Name="PdfDeleteView" IsVisible="False"/>
             <views:PdfInsertView x:Name="PdfInsertView" IsVisible="False"/>
             <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
+            <views:PdfImageView x:Name="PdfImageView" IsVisible="False"/>
             <!-- 预留OCR相关内容控件 -->
         </Grid>
         <TextBlock Grid.Column="1"

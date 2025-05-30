@@ -36,6 +36,7 @@ public partial class MainWindow : Window
     private readonly PdfDeleteView? _pdfDeleteView;
     private readonly PdfInsertView? _pdfInsertView;
     private readonly PdfCompressView? _pdfCompressView;
+    private readonly PdfImageView? _pdfImageView;
 
     public MainWindow()
     {
@@ -49,10 +50,12 @@ public partial class MainWindow : Window
         _pdfDeleteView = this.Find<PdfDeleteView>("PdfDeleteView");
         _pdfInsertView = this.Find<PdfInsertView>("PdfInsertView");
         _pdfCompressView = this.Find<PdfCompressView>("PdfCompressView");
+        _pdfImageView = this.Find<PdfImageView>("PdfImageView");
 
         // 验证所有必需的视图都已找到
         if (_pdfMergeView == null || _pdfSplitView == null || _pdfReplaceView == null ||
-            _pdfDeleteView == null || _pdfInsertView == null || _pdfCompressView == null)
+            _pdfDeleteView == null || _pdfInsertView == null || _pdfCompressView == null ||
+            _pdfImageView == null)
         {
             throw new InvalidOperationException("无法找到所有必需的视图控件");
         }
@@ -180,7 +183,8 @@ public partial class MainWindow : Window
     {
         if (sender is ListBox listBox && 
             _pdfMergeView != null && _pdfSplitView != null && _pdfReplaceView != null &&
-            _pdfDeleteView != null && _pdfInsertView != null && _pdfCompressView != null)
+            _pdfDeleteView != null && _pdfInsertView != null && _pdfCompressView != null &&
+            _pdfImageView != null)
         {
             _pdfMergeView.IsVisible = listBox.SelectedIndex == 0;
             _pdfSplitView.IsVisible = listBox.SelectedIndex == 1;
@@ -188,6 +192,7 @@ public partial class MainWindow : Window
             _pdfReplaceView.IsVisible = listBox.SelectedIndex == 3;
             _pdfDeleteView.IsVisible = listBox.SelectedIndex == 4;
             _pdfInsertView.IsVisible = listBox.SelectedIndex == 5;
+            _pdfImageView.IsVisible = listBox.SelectedIndex == 6;
         }
     }
 
