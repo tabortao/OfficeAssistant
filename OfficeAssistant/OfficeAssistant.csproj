@@ -21,6 +21,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.7" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.7" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.7" />
+    <PackageReference Include="Freeware.Pdf2Png" Version="1.0.1" />
     <PackageReference Include="PdfSharpCore" Version="1.3.67" />
   </ItemGroup>
 
