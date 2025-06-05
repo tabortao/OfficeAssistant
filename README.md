@@ -10,7 +10,7 @@ Office Assistant 是一款基于 Avalonia UI 开发的跨平台办公助手，�
 - 🛠 可扩展性：基于 MVVM 架构，易于扩展新功能
 - 📦 轻量级：单文件发布，无需安装，即点即用
 
-![Image](https://github.com/user-attachments/assets/39d7007a-e3fd-414b-8d60-b53c3d52db9e)
+![Office Assistant](https://github.com/user-attachments/assets/917b4ad7-a6c5-4552-b339-3f22e2a47283)
 
 ## 功能特性
 
