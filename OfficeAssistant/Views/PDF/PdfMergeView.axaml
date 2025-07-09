@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:DragDrop="clr-namespace:Avalonia.Input;assembly=Avalonia.Base"
              x:Class="OfficeAssistant.Views.PDF.PdfMergeView">
     <Border Background="#FAFAFA" CornerRadius="12" BoxShadow="0 2 8 0 #88888840" Padding="24">
         <StackPanel Spacing="18">
@@ -25,22 +26,29 @@
             </StackPanel>
 
             <!-- 文件列表 -->
-            <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
-                <ListBox ItemsSource="{Binding SelectedFiles}" MaxHeight="200">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <DockPanel LastChildFill="False">
-                                <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                                <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
-                                        Padding="4,0" Margin="8,0,0,0" 
-                                        Click="RemoveFile" 
-                                        CommandParameter="{Binding}" 
-                                        DockPanel.Dock="Right"/>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Border>
+            <Grid Height="200" MinHeight="100">
+                <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                    <ListBox x:Name="FileListBox"
+                             ItemsSource="{Binding SelectedFiles}"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             MaxHeight="Infinity"
+                             DragDrop.AllowDrop="True">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel LastChildFill="False">
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                    <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
+                                            Padding="4,0" Margin="8,0,0,0" 
+                                            Click="RemoveFile" 
+                                            CommandParameter="{Binding}" 
+                                            DockPanel.Dock="Right"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+            </Grid>
 
             <!-- 状态与进度 -->
             <StackPanel Spacing="8">

@@ -5,6 +5,9 @@
 - 下载地址：[.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-desktop-8.0.4-windows-x64-installer)
 
 
+## TODO
+- 增加文件拖放功能
+
 ## v1.1.7（20250530）
 ### ✨新增功能
 - 增加PDF批量转图片功能

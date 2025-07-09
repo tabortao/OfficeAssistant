@@ -73,37 +73,36 @@ namespace OfficeAssistant.ViewModels.PDF
 
             try
             {
-                // 获取存储提供程序
-                var storageProvider = App.MainWindow.StorageProvider;
-                // 打开保存文件对话框
-                var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                // 自动生成合并文件名：同目录下“合并结果.pdf”，如已存在则递增编号
+                var firstFile = SelectedFiles[0];
+                var dir = System.IO.Path.GetDirectoryName(firstFile)!;
+                var baseName = "合并结果";
+                var ext = ".pdf";
+                var outputPath = System.IO.Path.Combine(dir, baseName + ext);
+                int count = 1;
+                while (System.IO.File.Exists(outputPath))
                 {
-                    Title = "保存合并后的PDF",
-                    DefaultExtension = "pdf",
-                    FileTypeChoices = new[] { new FilePickerFileType("PDF Files") { Patterns = new[] { "*.pdf" } } }
-                });
-
-                // 如果用户选择了保存位置
-                if (file != null)
-                {
-                    // 创建新的PDF文档
-                    using var output = new PdfDocument();
-                    // 遍历所有选中的PDF文件
-                    foreach (var pdfFile in SelectedFiles)
-                    {
-                        // 以导入模式打开PDF文件
-                        using var document = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
-                        // 将文档的所有页面添加到输出文档
-                        for (int i = 0; i < document.PageCount; i++)
-                        {
-                            output.AddPage(document.Pages[i]);
-                        }
-                    }
-                    // 保存合并后的文档
-                    output.Save(file.Path.LocalPath);
-                    // 显示成功消息
-                    await ShowTemporaryMessage("PDF合并完成！", message => StatusMessage = message);
+                    outputPath = System.IO.Path.Combine(dir, $"{baseName}{count}{ext}");
+                    count++;
                 }
+
+                // 创建新的PDF文档
+                using var output = new PdfDocument();
+                // 遍历所有选中的PDF文件
+                foreach (var pdfFile in SelectedFiles)
+                {
+                    // 以导入模式打开PDF文件
+                    using var document = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+                    // 将文档的所有页面添加到输出文档
+                    for (int i = 0; i < document.PageCount; i++)
+                    {
+                        output.AddPage(document.Pages[i]);
+                    }
+                }
+                // 保存合并后的文档
+                output.Save(outputPath);
+                // 显示成功消息
+                await ShowTemporaryMessage($"PDF合并完成：{outputPath}", message => StatusMessage = message);
             }
             catch (Exception ex)
             {
