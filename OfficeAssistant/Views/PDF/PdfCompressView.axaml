@@ -23,7 +23,7 @@
                 </Button>
             </StackPanel>
             <!-- 文件列表 -->
-            <Grid Height="200" MinHeight="100">
+            <Grid Height="180" MinHeight="80">
                 <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
                     <ListBox x:Name="FileListBox"
                              ItemsSource="{Binding SelectedFiles}"

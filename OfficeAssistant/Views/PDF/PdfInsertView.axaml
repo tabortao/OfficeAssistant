@@ -26,23 +26,31 @@
                             <Button.Click>ClearSourceFiles</Button.Click>
                         </Button>
                     </StackPanel>
-                    
+
+                <!-- 文件列表 -->
+                <Grid Height="100" MinHeight="50">
                     <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
-                        <ListBox ItemsSource="{Binding SourceFiles}" MaxHeight="120">
+                        <ListBox x:Name="FileListBox"
+                                ItemsSource="{Binding SourceFiles}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                MaxHeight="Infinity"
+                                DragDrop.AllowDrop="True">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel LastChildFill="False">
                                         <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
                                         <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
-                                                Padding="4,0" Margin="8,0,0,0"
-                                                Click="RemoveSourceFile"
-                                                CommandParameter="{Binding}"
+                                                Padding="4,0" Margin="8,0,0,0" 
+                                                Click="RemoveSourceFile" 
+                                                CommandParameter="{Binding}" 
                                                 DockPanel.Dock="Right"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Border>
+                </Grid>
                 </StackPanel>
             </Border>
 
