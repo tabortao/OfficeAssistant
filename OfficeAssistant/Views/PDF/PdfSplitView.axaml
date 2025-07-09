@@ -25,22 +25,29 @@
             </StackPanel>
 
             <!-- 文件列表 -->
-            <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
-                <ListBox ItemsSource="{Binding SelectedFiles}" MaxHeight="120">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <DockPanel LastChildFill="False">
-                                <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                                <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
-                                        Padding="4,0" Margin="8,0,0,0"
-                                        Click="RemoveFile"
-                                        CommandParameter="{Binding}"
-                                        DockPanel.Dock="Right"/>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Border>
+            <Grid Height="200" MinHeight="100">
+                <Border Background="#FFFFFF" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                    <ListBox x:Name="FileListBox"
+                             ItemsSource="{Binding SelectedFiles}"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             MaxHeight="Infinity"
+                             DragDrop.AllowDrop="True">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel LastChildFill="False">
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                    <Button Content="删除" Background="#FFE0E0" Foreground="#B71C1C" 
+                                            Padding="4,0" Margin="8,0,0,0" 
+                                            Click="RemoveFile" 
+                                            CommandParameter="{Binding}" 
+                                            DockPanel.Dock="Right"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+            </Grid>
 
             <!-- 拆分设置区域 -->
             <Border Background="#F1F8E9" CornerRadius="8" Padding="14">
