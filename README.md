@@ -1,5 +1,5 @@
 # Office Assistant
-[English-machine translation](..\README.md)
+[English-machine translation](./docs/README-en.md)
 
 Office Assistant 是一款基于 Avalonia UI 开发的跨平台办公助手，专注于PDF文档的批量处理。它提供直观易用的用户界面，以及高效稳定的文档处理功能，包括PDF文件的批量合并、智能拆分、页面替换、PDF转图片等核心操作。该工具采用Views、ViewModels架构设计，确保代码具备良好的可维护性和扩展性，为用户提供流畅的使用体验。
 
@@ -10,7 +10,7 @@ Office Assistant 是一款基于 Avalonia UI 开发的跨平台办公助手，�
 - 🛠 可扩展性：基于 MVVM 架构，易于扩展新功能
 - 📦 轻量级：单文件发布，无需安装，即点即用
 
-![Office Assistant](https://github.com/user-attachments/assets/917b4ad7-a6c5-4552-b339-3f22e2a47283)
+![Office Assistant](./docs/UIImage/2025UI效果.jpg)
 
 ## 功能特性
 

@@ -1,6 +1,6 @@
 # Office Assistant
 
-[中文介绍](docs\README-zh.md)
+[中文介绍](../README.md)
 
 Office Assistant is a cross-platform office tool developed with Avalonia UI, focusing on batch processing of PDF documents. It provides an intuitive user interface and efficient, stable document processing functions, including batch merging, intelligent splitting, and page replacement of PDF files. The tool is designed with MVVM architecture, ensuring good maintainability and extensibility of the code while providing a smooth user experience.
 
@@ -12,7 +12,7 @@ Key Features:
 - 🛠 Extensibility: Based on MVVM architecture, easy to extend new features
 - 📦 Lightweight: Single-file deployment, no installation required, ready to use
 
-![Image](https://github.com/user-attachments/assets/39d7007a-e3fd-414b-8d60-b53c3d52db9e)
+![Office Assistant](./UIImage/2025UI效果.jpg)
 
 ## Features
 
