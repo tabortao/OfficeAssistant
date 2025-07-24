@@ -153,3 +153,9 @@ MIT License
 ## 贡献指南
 
 欢迎提交 Issue 和 Pull Request。
+
+## 软件下载
+
+- 欢迎关注公众号“可持续学园”，回复“OfficeAssistant”获取最新软件下载地址。
+
+![微信公众号](./docs/Images/微信公众号.jpg)
