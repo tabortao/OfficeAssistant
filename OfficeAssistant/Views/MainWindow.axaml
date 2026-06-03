@@ -138,7 +138,7 @@
             <views:PdfInsertView x:Name="PdfInsertView" IsVisible="False"/>
             <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
             <views:PdfImageView x:Name="PdfImageView" IsVisible="False"/>
-            <!-- 预留OCR相关内容控件 -->
+            <views:OcrView x:Name="OcrView" IsVisible="False"/>
         </Grid>
         <TextBlock Grid.Column="1"
                Text="{Binding Version}"

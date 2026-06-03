@@ -37,6 +37,7 @@ public partial class MainWindow : Window
     private readonly PdfInsertView? _pdfInsertView;
     private readonly PdfCompressView? _pdfCompressView;
     private readonly PdfImageView? _pdfImageView;
+    private readonly OcrView? _ocrView;
 
     public MainWindow()
     {
@@ -51,17 +52,60 @@ public partial class MainWindow : Window
         _pdfInsertView = this.Find<PdfInsertView>("PdfInsertView");
         _pdfCompressView = this.Find<PdfCompressView>("PdfCompressView");
         _pdfImageView = this.Find<PdfImageView>("PdfImageView");
+        _ocrView = this.Find<OcrView>("OcrView");
 
         // 验证所有必需的视图都已找到
         if (_pdfMergeView == null || _pdfSplitView == null || _pdfReplaceView == null ||
             _pdfDeleteView == null || _pdfInsertView == null || _pdfCompressView == null ||
-            _pdfImageView == null)
+            _pdfImageView == null || _ocrView == null)
         {
             throw new InvalidOperationException("无法找到所有必需的视图控件");
         }
 
         selectedFiles = [];
         DataContext = this;
+
+        // 确保所有视图的初始状态正确
+        if (_pdfMergeView != null) _pdfMergeView.IsVisible = true;
+        if (_pdfSplitView != null) _pdfSplitView.IsVisible = false;
+        if (_pdfReplaceView != null) _pdfReplaceView.IsVisible = false;
+        if (_pdfDeleteView != null) _pdfDeleteView.IsVisible = false;
+        if (_pdfInsertView != null) _pdfInsertView.IsVisible = false;
+        if (_pdfCompressView != null) _pdfCompressView.IsVisible = false;
+        if (_pdfImageView != null) _pdfImageView.IsVisible = false;
+        if (_ocrView != null) _ocrView.IsVisible = false;
+
+        // 初始化导航栏，确保默认显示PDF相关功能，隐藏OCR功能
+        InitializeNavigation();
+    }
+
+    // 初始化导航栏状态
+    private void InitializeNavigation()
+    {
+        var navList = this.FindControl<ListBox>("NavigationList");
+        if (navList != null)
+        {
+            // 先清除选择
+            navList.SelectedIndex = -1;
+            
+            // 确保导航栏可见
+            navList.IsVisible = true;
+            
+            // 显示所有PDF相关导航项，隐藏OCR导航项
+            foreach (var item in navList.Items)
+            {
+                if (item is ListBoxItem lbi)
+                {
+                    if (lbi.Name == "OcrNavItem")
+                        lbi.IsVisible = false;
+                    else
+                        lbi.IsVisible = true;
+                }
+            }
+            
+            // 确保默认选中第一个PDF功能
+            navList.SelectedIndex = 0;
+        }
     }
 
     // 公开选中文件列表的属性
@@ -184,15 +228,36 @@ public partial class MainWindow : Window
         if (sender is ListBox listBox && 
             _pdfMergeView != null && _pdfSplitView != null && _pdfReplaceView != null &&
             _pdfDeleteView != null && _pdfInsertView != null && _pdfCompressView != null &&
-            _pdfImageView != null)
+            _pdfImageView != null && _ocrView != null)
         {
-            _pdfMergeView.IsVisible = listBox.SelectedIndex == 0;
-            _pdfSplitView.IsVisible = listBox.SelectedIndex == 1;
-            _pdfCompressView.IsVisible = listBox.SelectedIndex == 2;
-            _pdfReplaceView.IsVisible = listBox.SelectedIndex == 3;
-            _pdfDeleteView.IsVisible = listBox.SelectedIndex == 4;
-            _pdfInsertView.IsVisible = listBox.SelectedIndex == 5;
-            _pdfImageView.IsVisible = listBox.SelectedIndex == 6;
+            // 先隐藏所有视图
+            _pdfMergeView.IsVisible = false;
+            _pdfSplitView.IsVisible = false;
+            _pdfCompressView.IsVisible = false;
+            _pdfReplaceView.IsVisible = false;
+            _pdfDeleteView.IsVisible = false;
+            _pdfInsertView.IsVisible = false;
+            _pdfImageView.IsVisible = false;
+            _ocrView.IsVisible = false;
+
+            // 根据选中项显示对应视图
+            if (listBox.SelectedItem is ListBoxItem selectedItem)
+            {
+                if (selectedItem.Name == "OcrNavItem")
+                {
+                    _ocrView.IsVisible = true;
+                }
+                else
+                {
+                    _pdfMergeView.IsVisible = listBox.SelectedIndex == 0;
+                    _pdfSplitView.IsVisible = listBox.SelectedIndex == 1;
+                    _pdfCompressView.IsVisible = listBox.SelectedIndex == 2;
+                    _pdfReplaceView.IsVisible = listBox.SelectedIndex == 3;
+                    _pdfDeleteView.IsVisible = listBox.SelectedIndex == 4;
+                    _pdfInsertView.IsVisible = listBox.SelectedIndex == 5;
+                    _pdfImageView.IsVisible = listBox.SelectedIndex == 6;
+                }
+            }
         }
     }
 
@@ -220,14 +285,16 @@ public partial class MainWindow : Window
         }
     }
 
-    // OCR图标点击事件，切换到OCR相关导航栏（预留，实际功能待开发）
+    // OCR图标点击事件，切换到OCR相关导航栏
     private void OnOcrIconClick(object? sender, RoutedEventArgs e)
     {
         var navList = this.FindControl<ListBox>("NavigationList");
         if (navList != null)
         {
-            // 只显示OCR导航项，隐藏PDF相关项
+            // 先清除所有选择
             navList.SelectedIndex = -1;
+            
+            // 只显示OCR导航项，隐藏PDF相关项
             foreach (var item in navList.Items)
             {
                 if (item is ListBoxItem lbi)
@@ -238,6 +305,9 @@ public partial class MainWindow : Window
                         lbi.IsVisible = false;
                 }
             }
+            
+            // 选中OCR导航项，这样会触发OnNavigationSelectionChanged显示OCR视图
+            navList.SelectedIndex = 7;
         }
     }
 }
