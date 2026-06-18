@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Linq;
 using Avalonia.Platform.Storage;
+using OfficeAssistant.Helpers;
 
 namespace OfficeAssistant.ViewModels.PDF
 {
@@ -177,6 +178,10 @@ namespace OfficeAssistant.ViewModels.PDF
             var sw = Stopwatch.StartNew();
             Progress = 0;
 
+            // 查找 GhostScript 路径（仅查找一次）
+            string gsPath = GhostscriptHelper.FindGhostscriptExecutablePath();
+            string gsWorkingDir = Path.GetDirectoryName(gsPath) ?? "";
+
             for (int i = 0; i < SelectedFiles.Count; i++)
             {
                 var pdfFile = SelectedFiles[i];
@@ -234,8 +239,9 @@ namespace OfficeAssistant.ViewModels.PDF
 
                         var startInfo = new ProcessStartInfo
                         {
-                            FileName = "gswin64c",
+                            FileName = gsPath,
                             Arguments = gsArgs,
+                            WorkingDirectory = gsWorkingDir,
                             UseShellExecute = false,
                             RedirectStandardError = true,
                             CreateNoWindow = true

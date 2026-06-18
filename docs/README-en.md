@@ -10,7 +10,7 @@ Key Features:
 - 💻 Cross-platform Support: Developed with Avalonia UI, supporting Windows, Linux, and macOS
 - 🎨 Modern Interface: Using Semi.Avalonia theme for a modern user experience
 - 🛠 Extensibility: Based on MVVM architecture, easy to extend new features
-- 📦 Lightweight: Single-file deployment, no installation required, ready to use
+- 📦 Lightweight: Installer provided, simple steps to complete installation
 
 ![Office Assistant](./UIImage/2025UI效果.jpg)
 
@@ -37,13 +37,14 @@ Key Features:
 
 ## Development Requirements
 
-- .NET 8.0 SDK
+- .NET 10.0 SDK
 - Visual Studio 2022 or other .NET-supporting IDEs
 
 ## Technologies Used
 
 - Avalonia UI 11.2.7
-- PdfSharpCore
+- PdfSharpCore（PDF page counting and processing）
+- GhostScript 10.05.1（PDF compression and image conversion, bundled, no additional installation required）
 
 ## Quick Start
 
@@ -107,9 +108,9 @@ dotnet publish -r win-x64 -c Release --self-contained false /p:PublishSingleFile
 ## Runtime Requirements
 
 - Windows 10/11
-- .NET 8.0 Runtime
-  - Download: [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), download the .NET 8 runtime for your system.
-![.NET8 Runtime](https://lei-1258171996.cos.ap-guangzhou.myqcloud.com/imgs/2024/202504142154045.jpg)
+- .NET 10.0 Desktop Runtime
+  - Download: [.NET 10.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- GhostScript 10.05.1 (bundled in the installer, no additional installation required)
 
 ## License
 

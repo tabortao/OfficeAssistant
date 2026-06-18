@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
+using OfficeAssistant.Helpers;
 
 namespace OfficeAssistant.ViewModels.PDF
 {
@@ -208,70 +209,6 @@ namespace OfficeAssistant.ViewModels.PDF
             }
         }
 
-        /// <summary>
-        /// 执行PDF压缩
-        /// </summary>
-        // 修改方法名并调整查找逻辑
-        private static string FindGhostscriptExecutablePath()
-        {
-            // 1. 遍历PATH环境变量查找gswin64c.exe (Windows) 或 gs (Linux/macOS)
-            var paths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
-            string[] exeNames;
-            if (OperatingSystem.IsWindows())
-            {
-                exeNames = ["gswin64c.exe", "gswin32c.exe"]; // Windows 64位和32位
-            }
-            else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
-            {
-                exeNames = ["gs"]; // Linux/macOS
-            }
-            else
-            {
-                throw new PlatformNotSupportedException("Unsupported OS for Ghostscript executable search.");
-            }
-
-            foreach (var dir in paths)
-            {
-                foreach (var exe in exeNames)
-                {
-                    try
-                    {
-                        var fullPath = Path.Combine(dir.Trim(), exe);
-                        if (File.Exists(fullPath))
-                            return fullPath;
-                    }
-                    catch { /* 忽略路径组合等错误 */ }
-                }
-            }
-
-            // 2. 可选：检查常见安装目录 (以Windows为例，您可以根据需要添加其他平台的路径)
-            string[] commonDirs = 
-            [
-                // 注意：这里的路径应该指向包含可执行文件的bin目录
-                @"C:\Program Files\gs\gs10.05.1\bin", 
-                @"D:\Program Files\gs\gs10.05.1\bin",
-                // Linux/macOS 示例 (通常gs在PATH中)
-                "/usr/bin/", 
-                "/usr/local/bin/"
-            ];
-
-            foreach (var dir in commonDirs)
-            {
-                foreach (var exe in exeNames)
-                {
-                    try
-                    {
-                        var fullPath = Path.Combine(dir.Trim(), exe);
-                        if (File.Exists(fullPath))
-                            return fullPath;
-                    }
-                    catch { /* 忽略路径组合等错误 */ }
-                }
-            }
-
-            throw new FileNotFoundException("未能自动找到Ghostscript可执行文件，请检查Ghostscript安装并确保其在系统PATH中。");
-        }
-
         public async Task CompressFiles()
         {
             if (SelectedFiles.Count == 0) return;
@@ -282,7 +219,8 @@ namespace OfficeAssistant.ViewModels.PDF
                 Progress = 0;
                 ProcessingTime = "";
                 
-                string gsPath = FindGhostscriptExecutablePath(); // 查找Ghostscript可执行文件路径
+                string gsPath = GhostscriptHelper.FindGhostscriptExecutablePath();
+                string gsWorkingDir = Path.GetDirectoryName(gsPath) ?? "";
 
                 await Task.Run(() =>
                 {
@@ -296,9 +234,6 @@ namespace OfficeAssistant.ViewModels.PDF
                         var currentOutputFile = Path.Combine(outputDir,
                             Path.GetFileNameWithoutExtension(currentInputFile) + "_compressed.pdf");
 
-                        // 构建Ghostscript命令行参数
-                        // 注意：参数根据您的需求调整，这里使用与之前类似的 /ebook 设置
-                        // 您可以根据需要调整 -dCompatibilityLevel 和 -dPDFSETTINGS
                         var arguments = string.Format(
                             "-sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER " +
                             "-dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook " +
@@ -309,6 +244,7 @@ namespace OfficeAssistant.ViewModels.PDF
                         {
                             FileName = gsPath,
                             Arguments = arguments,
+                            WorkingDirectory = gsWorkingDir,
                             CreateNoWindow = true,
                             UseShellExecute = false,
                             RedirectStandardOutput = true,

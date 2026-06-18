@@ -2,7 +2,7 @@
 ; 每次发布需要注意修改版本号。
 
 #define MyAppName "OfficeAssistant"
-#define MyAppVersion "1.1.8"
+#define MyAppVersion "2.0.1"
 #define MyAppPublisher "OfficeAssistant, Inc."
 #define MyAppURL "https://www.sdgarden.top/"
 #define MyAppExeName "OfficeAssistant.exe"
@@ -37,8 +37,8 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputBaseFilename={#MyAppName}-windows-x64-V{#MyAppVersion}
 ; 输出目录
-OutputDir=F:\Code\OfficeAssistant\OfficeAssistant\bin\Release\Release
-SetupIconFile=F:\Code\OfficeAssistant\OfficeAssistant\Resources\ai.ico
+OutputDir=D:\Code\CSharp\OfficeAssistant\OfficeAssistant\bin\Release\Release
+SetupIconFile=D:\Code\CSharp\OfficeAssistant\OfficeAssistant\Resources\ai.ico
 SolidCompression=yes
 WizardStyle=modern
 [Languages]
@@ -48,8 +48,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "F:\Code\OfficeAssistant\OfficeAssistant\bin\Release\net8.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "F:\Code\OfficeAssistant\OfficeAssistant\bin\Release\net8.0\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Code\CSharp\OfficeAssistant\OfficeAssistant\bin\Release\net10.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Code\CSharp\OfficeAssistant\OfficeAssistant\bin\Release\net10.0\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
