@@ -22,7 +22,6 @@
                 BorderBrush="Transparent"
                 Padding="8"
                 Width="44" Height="44"
-                Click="OnPdfIconClick"
                 ToolTip.Tip="PDF工具">
                 <Button.Styles>
                 <Style Selector="Button:pointerover">
@@ -33,23 +32,6 @@
                 </Style>
                 </Button.Styles>
                 <Image Source="/Resources/Pdf64.png" Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Button>
-            <Button Name="OcrIconButton"
-                Background="Transparent"
-                BorderBrush="Transparent"
-                Padding="8"
-                Width="44" Height="44"
-                Click="OnOcrIconClick"
-                ToolTip.Tip="OCR工具">
-                <Button.Styles>
-                <Style Selector="Button:pointerover">
-                    <Setter Property="Background" Value="#334A90E2"/>
-                </Style>
-                <Style Selector="Button:pressed">
-                    <Setter Property="Background" Value="#225A90E2"/>
-                </Style>
-                </Button.Styles>
-                <Image Source="/Resources/OCR64.png" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
             </StackPanel>
         </Border>
@@ -120,13 +102,6 @@
                         <TextBlock Text="PDF转图片" VerticalAlignment="Center" Foreground="White"/>
                     </StackPanel>
                 </ListBoxItem>
-                <!-- 预留OCR相关功能导航项 -->
-                <ListBoxItem Name="OcrNavItem" IsVisible="False">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Source="/Resources/OCR32.png" Width="24" Height="24"/>
-                        <TextBlock Text="OCR功能" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
-                </ListBoxItem>
             </ListBox>
         </Border>
 
@@ -138,7 +113,6 @@
             <views:PdfInsertView x:Name="PdfInsertView" IsVisible="False"/>
             <views:PdfCompressView x:Name="PdfCompressView" IsVisible="False"/>
             <views:PdfImageView x:Name="PdfImageView" IsVisible="False"/>
-            <views:OcrView x:Name="OcrView" IsVisible="False"/>
         </Grid>
         <TextBlock Grid.Column="1"
                Text="{Binding Version}"
